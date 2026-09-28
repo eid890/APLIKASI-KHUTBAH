@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Khotbah Jumat - Google Sheets Edition</title>
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .setup-panel {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .setup-panel h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .setup-panel p {
+            color: #856404;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .setup-input {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .setup-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            min-width: 300px;
+        }
+
+        .setup-input button {
+            padding: 10px 20px;
+            background: #1e3c72;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: #1e3c72;
+            border-bottom-color: #1e3c72;
+            background: white;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #1e3c72;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 5px rgba(30, 60, 114, 0.3);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #16304a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1e3c72;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            display: inline-block;
+            width: 30%;
+            margin-right: 2%;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .stat-card {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕌 Jadwal Khotbah Jumat</h1>
+            <p>Pesantren Wihdatul Ummah Poso - Google Sheets Edition</p>
+        </div>
+
+        <!-- Setup Panel -->
+        <div class="content" style="padding-bottom: 0;">
+            <div class="setup-panel">
+                <h3>⚙️ Setup: Paste Deployment URL dari Google Apps Script</h3>
+                <p>Dapatkan URL dari: Google Sheet → Tools → Script Editor → Deploy → Copy URL</p>
+                <div class="setup-input">
+                    <input type="text" id="appsScriptUrl" placeholder="Paste deployment URL di sini..." value="">
+                    <button onclick="saveScriptUrl()">Save URL</button>
+                </div>
+                <div id="statusMessage" style="margin-top: 10px; font-size: 12px;"></div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('khotib')">👨‍🏫 Khotib</button>
+            <button class="tab-btn" onclick="switchTab('masjid')">🕌 Masjid</button>
+            <button class="tab-btn" onclick="switchTab('jadwal')">📅 Jadwal</button>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Dashboard -->
+            <div id="dashboard" class="tab-content active">
+                <h2 class="section-title">📊 Dashboard</h2>
+                <div id="dashboardStats"></div>
+                <button class="btn-primary" onclick="refreshAll()" style="margin-top: 20px;">
+                    🔄 Refresh Data
+                </button>
+            </div>
+
+            <!-- Khotib -->
+            <div id="khotib" class="tab-content">
+                <h2 class="section-title">👨‍🏫 Kelola Khotib</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nama Khotib</label>
+                        <input type="text" id="khotibNama" placeholder="Masukkan nama">
+                    </div>
+                    <div class="form-group">
+                        <label>Level</label>
+                        <select id="khotibLevel">
+                            <option value="">-- Pilih Level --</option>
+                            <option value="1">Level 1</option>
+                            <option value="2">Level 2</option>
+                            <option value="3">Level 3</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Kontak</label>
+                        <input type="text" id="khotibKontak" placeholder="+62 xxx xxxx">
+                    </div>
+                    <div class="form-group">
+                        <label>Spesialisasi</label>
+                        <input type="text" id="khotibSpesialisasi" placeholder="Fiqh, Aqidah, dll">
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="addKhotib()">➕ Tambah Khotib</button>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Level</th>
+                            <th>Kontak</th>
+                            <th>Spesialisasi</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="khotibList"></tbody>
+                </table>
+            </div>
+
+            <!-- Masjid -->
+            <div id="masjid" class="tab-content">
+                <h2 class="section-title">🕌 Kelola Masjid</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nama Masjid</label>
+                        <input type="text" id="masjidNama" placeholder="Masukkan nama">
+                    </div>
+                    <div class="form-group">
+                        <label>Level</label>
+                        <select id="masjidLevel">
+                            <option value="">-- Pilih Level --</option>
+                            <option value="1">Level 1</option>
+                            <option value="2">Level 2</option>
+                            <option value="3">Level 3</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Lokasi</label>
+                        <input type="text" id="masjidLokasi" placeholder="Lokasi/Alamat">
+                    </div>
+                    <div class="form-group">
+                        <label>Kontak Pengelola</label>
+                        <input type="text" id="masjidKontak" placeholder="+62 xxx xxxx">
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="addMasjid()">➕ Tambah Masjid</button>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Level</th>
+                            <th>Lokasi</th>
+                            <th>Kontak</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="masjidList"></tbody>
+                </table>
+            </div>
+
+            <!-- Jadwal -->
+            <div id="jadwal" class="tab-content">
+                <h2 class="section-title">📅 Penjadwalan</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Pilih Masjid</label>
+                        <select id="jadwalMasjid">
+                            <option value="">-- Pilih Masjid --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Jumat</label>
+                        <input type="date" id="jadwalTanggal">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Pilih Khotib</label>
+                        <select id="jadwalKhotib">
+                            <option value="">-- Pilih Khotib --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Catatan</label>
+                        <input type="text" id="jadwalCatatan" placeholder="Catatan (optional)">
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="addJadwal()">➕ Simpan Jadwal</button>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Masjid</th>
+                            <th>Khotib</th>
+                            <th>Catatan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jadwalList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ CONFIG ============
+        let APPS_SCRIPT_URL = localStorage.getItem("appsScriptUrl") || "";
+        let khotibList = [];
+        let masjidList = [];
+        let jadwalList = [];
+
+        // ============ SETUP ============
+        function saveScriptUrl() {
+            const url = document.getElementById("appsScriptUrl").value.trim();
+            
+            if (!url) {
+                showStatus("❌ URL tidak boleh kosong", "error");
+                return;
+            }
+
+            if (!url.includes("script.google.com")) {
+                showStatus("❌ URL tidak valid. Harus dari Google Apps Script", "error");
+                return;
+            }
+
+            APPS_SCRIPT_URL = url;
+            localStorage.setItem("appsScriptUrl", url);
+            showStatus("✅ URL saved! Testing koneksi...", "success");
+            
+            // Test connection
+            callAppsScript("health").then(result => {
+                if (result.status === "ok") {
+                    showStatus("✅ Koneksi berhasil! Apps Script siap.", "success");
+                    refreshAll();
+                } else {
+                    showStatus("❌ Koneksi gagal. Cek URL lagi.", "error");
+                }
+            }).catch(error => {
+                showStatus("❌ Error: " + error, "error");
+            });
+        }
+
+        function showStatus(message, type = "info") {
+            const statusDiv = document.getElementById("statusMessage");
+            statusDiv.textContent = message;
+            statusDiv.style.color = type === "success" ? "#155724" : type === "error" ? "#721c24" : "#0c5460";
+        }
+
+        // ============ API CALLS ============
+        async function callAppsScript(action, method = "GET", data = null) {
+            if (!APPS_SCRIPT_URL) {
+                throw new Error("Apps Script URL tidak diset. Setup URL terlebih dahulu.");
+            }
+
+            const url = APPS_SCRIPT_URL + "?action=" + action;
+
+            try {
+                let response;
+                
+                if (method === "GET") {
+                    response = await fetch(url);
+                } else {
+                    response = await fetch(url, {
+                        method: "POST",
+                        payload: JSON.stringify({ action: action, ...data })
+                    });
+                }
+
+                const result = await response.json();
+                return result;
+            } catch(error) {
+                console.error("API Error:", error);
+                throw error;
+            }
+        }
+
+        // ============ KHOTIB ============
+        async function refreshKhotib() {
+            try {
+                const result = await callAppsScript("getKhotib");
+                khotibList = result.data || [];
+                renderKhotib();
+            } catch(error) {
+                showStatus("❌ Error loading khotib: " + error, "error");
+            }
+        }
+
+        async function addKhotib() {
+            const nama = document.getElementById("khotibNama").value;
+            const level = document.getElementById("khotibLevel").value;
+            const kontak = document.getElementById("khotibKontak").value;
+            const spesialisasi = document.getElementById("khotibSpesialisasi").value;
+
+            if (!nama || !level) {
+                alert("Nama dan level harus diisi!");
+                return;
+            }
+
+            try {
+                const result = await callAppsScript("addKhotib", "POST", {
+                    nama, level, kontak, spesialisasi
+                });
+
+                if (result.status === "success") {
+                    showStatus("✅ Khotib berhasil ditambahkan", "success");
+                    document.getElementById("khotibNama").value = "";
+                    document.getElementById("khotibLevel").value = "";
+                    document.getElementById("khotibKontak").value = "";
+                    document.getElementById("khotibSpesialisasi").value = "";
+                    refreshKhotib();
+                } else {
+                    showStatus("❌ Error: " + result.message, "error");
+                }
+            } catch(error) {
+                showStatus("❌ Error: " + error, "error");
+            }
+        }
+
+        async function deleteKhotib(id) {
+            if (!confirm("Hapus khotib ini?")) return;
+
+            try {
+                const result = await callAppsScript("deleteKhotib", "POST", { id });
+                if (result.status === "success") {
+                    showStatus("✅ Khotib berhasil dihapus", "success");
+                    refreshKhotib();
+                } else {
+                    showStatus("❌ Error: " + result.message, "error");
+                }
+            } catch(error) {
+                showStatus("❌ Error: " + error, "error");
+            }
+        }
+
+        function renderKhotib() {
+            const tbody = document.getElementById("khotibList");
+            tbody.innerHTML = "";
+
+            if (!khotibList || khotibList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Belum ada data</td></tr>';
+                return;
+            }
+
+            khotibList.forEach(k => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${k.Nama || ""}</td>
+                        <td>Level ${k.Level || ""}</td>
+                        <td>${k.Kontak || ""}</td>
+                        <td>${k.Spesialisasi || ""}</td>
+                        <td>
+                            <button class="btn-danger" onclick="deleteKhotib(${k.ID})">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // ============ MASJID ============
+        async function refreshMasjid() {
+            try {
+                const result = await callAppsScript("getMasjid");
+                masjidList = result.data || [];
+                renderMasjid();
+            } catch(error) {
+                showStatus("❌ Error loading masjid: " + error, "error");
+            }
+        }
+
+        async function addMasjid() {
+            const nama = document.getElementById("masjidNama").value;
+            const level = document.getElementById("masjidLevel").value;
+            const lokasi = document.getElementById("masjidLokasi").value;
+            const kontak = document.getElementById("masjidKontak").value;
+
+            if (!nama || !level) {
+                alert("Nama dan level harus diisi!");
+                return;
+            }
+
+            try {
+                const result = await callAppsScript("addMasjid", "POST", {
+                    nama, level, lokasi, kontak
+                });
+
+                if (result.status === "success") {
+                    showStatus("✅ Masjid berhasil ditambahkan", "success");
+                    document.getElementById("masjidNama").value = "";
+                    document.getElementById("masjidLevel").value = "";
+                    document.getElementById("masjidLokasi").value = "";
+                    document.getElementById("masjidKontak").value = "";
+                    refreshMasjid();
+                } else {
+                    showStatus("❌ Error: " + result.message, "error");
+                }
+            } catch(error) {
+                showStatus("❌ Error: " + error, "error");
+            }
+        }
+
+        async function deleteMasjid(id) {
+            if (!confirm("Hapus masjid ini?")) return;
+
+            try {
+                const result = await callAppsScript("deleteMasjid", "POST", { id });
+                if (result.status === "success") {
+                    showStatus("✅ Masjid berhasil dihapus", "success");
+                    refreshMasjid();
+                } else {
+                    showStatus("❌ Error: " + result.message, "error");
+                }
+            } catch(error) {
+                showStatus("❌ Error: " + error, "error");
+            }
+        }
+
+        function renderMasjid() {
+            const tbody = document.getElementById("masjidList");
+            tbody.innerHTML = "";
+
+            if (!masjidList || masjidList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Belum ada data</td></tr>';
+                return;
+            }
+
+            masjidList.forEach(m => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${m.Nama || ""}</td>
+                        <td>Level ${m.Level || ""}</td>
+                        <td>${m.Lokasi || ""}</td>
+                        <td>${m['Kontak Pengelola'] || ""}</td>
+                        <td>
+                            <button class="btn-danger" onclick="deleteMasjid(${m.ID})">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // ============ JADWAL ============
+        async function refreshJadwal() {
+            try {
+                const result = await callAppsScript("getJadwal");
+                jadwalList = result.data || [];
+                renderJadwal();
+            } catch(error) {
+                showStatus("❌ Error loading jadwal: " + error, "error");
+            }
+        }
+
+        async function addJadwal() {
+            const masjidId = document.getElementById("jadwalMasjid").value;
+            const khotibId = document.getElementById("jadwalKhotib").value;
+            const tanggal = document.getElementById("jadwalTanggal").value;
+            const catatan = document.getElementById("jadwalCatatan").value;
+
+            if (!masjidId || !khotibId || !tanggal) {
+                alert("Semua field harus diisi!");
+                return;
+            }
+
+            try {
+                const result = await callAppsScript("addJadwal", "POST", {
+                    masjidId, khotibId, tanggal, catatan
+                });
+
+                if (result.status === "success") {
+                    showStatus("✅ Jadwal berhasil ditambahkan", "success");
+                    document.getElementById("jadwalMasjid").value = "";
+                    document.getElementById("jadwalKhotib").value = "";
+                    document.getElementById("jadwalTanggal").value = "";
+                    document.getElementById("jadwalCatatan").value = "";
+                    refreshJadwal();
+                } else {
+                    showStatus("❌ Error: " + result.message, "error");
+                }
+            } catch(error) {
+                showStatus("❌ Error: " + error, "error");
+            }
+        }
+
+        async function deleteJadwal(id) {
+            if (!confirm("Hapus jadwal ini?")) return;
+
+            try {
+                const result = await callAppsScript("deleteJadwal", "POST", { id });
+                if (result.status === "success") {
+                    showStatus("✅ Jadwal berhasil dihapus", "success");
+                    refreshJadwal();
+                } else {
+                    showStatus("❌ Error: " + result.message, "error");
+                }
+            } catch(error) {
+                showStatus("❌ Error: " + error, "error");
+            }
+        }
+
+        function renderJadwal() {
+            const tbody = document.getElementById("jadwalList");
+            tbody.innerHTML = "";
+
+            if (!jadwalList || jadwalList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Belum ada data</td></tr>';
+                return;
+            }
+
+            jadwalList.forEach(j => {
+                const masjid = masjidList.find(m => m.ID == j['Masjid ID']);
+                const khotib = khotibList.find(k => k.ID == j['Khotib ID']);
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${j.Tanggal || ""}</td>
+                        <td>${masjid ? masjid.Nama : "N/A"}</td>
+                        <td>${khotib ? khotib.Nama : "N/A"}</td>
+                        <td>${j.Catatan || ""}</td>
+                        <td>
+                            <button class="btn-danger" onclick="deleteJadwal(${j.ID})">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // ============ DASHBOARD ============
+        function renderDashboard() {
+            const stats = `
+                <div class="stat-card">
+                    <div class="stat-number">${khotibList.length}</div>
+                    <p>Total Khotib</p>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="stat-number">${masjidList.length}</div>
+                    <p>Total Masjid</p>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="stat-number">${jadwalList.length}</div>
+                    <p>Total Jadwal</p>
+                </div>
+            `;
+            document.getElementById("dashboardStats").innerHTML = stats;
+        }
+
+        // ============ UI ============
+        function switchTab(tabName) {
+            document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+
+            document.getElementById(tabName).classList.add("active");
+            event.target.classList.add("active");
+        }
+
+        async function refreshAll() {
+            showStatus("⏳ Loading data...", "info");
+            await refreshKhotib();
+            await refreshMasjid();
+            await refreshJadwal();
+            renderDashboard();
+            showStatus("✅ Data refreshed", "success");
+        }
+
+        // ============ INIT ============
+        window.onload = function() {
+            if (APPS_SCRIPT_URL) {
+                document.getElementById("appsScriptUrl").value = APPS_SCRIPT_URL;
+                refreshAll();
+            }
+        };
+    </script>
+</body>
+</html>
