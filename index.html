@@ -88,6 +88,7 @@ tr.clk:hover td{background:#f5f8f6}
 .lv1{background:#e7f0ea;color:#2d6a4f}
 .lv2{background:#fdf1d8;color:#8a5a00}
 .lv3{background:#fbe4e1;color:#9b2c22}
+.lv4{background:#e7e4f8;color:#3f2f94}
 .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:20px;background:#eef0ef;color:var(--muted);white-space:nowrap}
 .tag.warn{background:var(--gold-bg);color:var(--gold)}
 .tag.bad{background:var(--red-bg);color:var(--red)}
@@ -276,6 +277,7 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
     <button data-tab="rekap">Rekap & riwayat</button>
     <button data-tab="khotib">Khotib</button>
     <button data-tab="masjid">Masjid</button>
+    <button data-tab="aturan">Aturan</button>
     <button data-tab="cetak">Cetak</button>
     <button data-tab="pengaturan">Pengaturan</button>
   </nav>
@@ -328,7 +330,7 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
         <select id="rtJumlah"><option value="1">1 bulan</option><option value="2">2 bulan</option><option value="3">3 bulan</option><option value="6">6 bulan</option><option value="12">12 bulan</option></select></div>
       <div class="field"><label for="rtPrioritas">Pemilihan level</label>
         <select id="rtPrioritas"><option value="sama">Utamakan level yang sama dengan masjid</option><option value="campur">Campur semua level yang diizinkan</option></select>
-        <small>"Utamakan" menjaga khotib ❸ di masjid ❸, dan khotib ❶ mengisi masjid ❶.</small></div>
+        <small>"Utamakan" menjaga tiap khotib di masjid selevelnya (❹ di ❹, ❸ di ❸, dst.). Larangan masjid dan kuota kelompok selalu dipatuhi.</small></div>
       <div class="field"><label for="rtBatas">Batas tugas per khotib</label>
         <select id="rtBatas"><option value="0">Tanpa batas</option><option value="2">2 kali per bulan</option><option value="3" selected>3 kali per bulan</option><option value="4">4 kali per bulan</option></select></div>
     </div>
@@ -365,12 +367,12 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
 <!-- KHOTIB -->
 <section class="tab" id="tab-khotib">
   <h2>Khotib</h2>
-  <p class="lead">Aturan level: khotib ❶ boleh di semua masjid, khotib ❷ di masjid ❷ dan ❸, khotib ❸ hanya di masjid ❸. Khotib yang sedang berhalangan cukup dinonaktifkan agar tidak masuk rotasi; riwayatnya tetap tersimpan.</p>
+  <p class="lead">Aturan level: khotib ❶ boleh di semua masjid, khotib ❷ di masjid ❷–❹, khotib ❸ di masjid ❸–❹, khotib ❹ hanya di masjid ❹. Larangan masjid dan kelompok diatur di tab Aturan. Khotib yang sedang berhalangan cukup dinonaktifkan agar tidak masuk rotasi; riwayatnya tetap tersimpan.</p>
   <div class="panel">
     <h3 id="khTitle">Tambah khotib</h3>
     <div class="grid">
       <div class="field"><label for="khNama">Nama</label><input id="khNama" placeholder="Ust. ..."></div>
-      <div class="field"><label for="khLevel">Level</label><select id="khLevel"><option value="1">❶ Level 1</option><option value="2">❷ Level 2</option><option value="3">❸ Level 3</option></select></div>
+      <div class="field"><label for="khLevel">Level</label><select id="khLevel"><option value="1">❶ Level 1</option><option value="2">❷ Level 2</option><option value="3">❸ Level 3</option><option value="4">❹ Level 4</option></select></div>
       <div class="field"><label for="khKontak">No. HP / WA</label><input id="khKontak" inputmode="tel" placeholder="08..."></div>
       <div class="field"><label for="khSpes">Spesialisasi</label><input id="khSpes" placeholder="Fiqih, Aqidah, ..."></div>
       <div class="field"><label for="khAktif">Status</label><select id="khAktif"><option value="true">Aktif</option><option value="false">Tidak aktif</option></select></div>
@@ -392,7 +394,7 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
     <h3 id="msTitle">Tambah masjid</h3>
     <div class="grid">
       <div class="field"><label for="msNama">Nama masjid</label><input id="msNama" placeholder="Masjid ..."></div>
-      <div class="field"><label for="msLevel">Level</label><select id="msLevel"><option value="1">❶ Level 1</option><option value="2">❷ Level 2</option><option value="3">❸ Level 3</option></select></div>
+      <div class="field"><label for="msLevel">Level</label><select id="msLevel"><option value="1">❶ Level 1</option><option value="2">❷ Level 2</option><option value="3">❸ Level 3</option><option value="4">❹ Level 4</option></select></div>
       <div class="field"><label for="msLokasi">Lokasi</label><input id="msLokasi" placeholder="Desa / kecamatan"></div>
       <div class="field"><label for="msKontak">Kontak pengurus</label><input id="msKontak" inputmode="tel" placeholder="08..."></div>
       <div class="field"><label for="msAktif">Status</label><select id="msAktif"><option value="true">Aktif</option><option value="false">Tidak aktif</option></select></div>
@@ -409,6 +411,36 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
     </div>
     <div class="tbl-wrap"><table><thead><tr><th>Nama</th><th>Level</th><th>Pekan</th><th>Bulan</th><th>Status</th><th class="num">Khotib sesuai</th><th>Keterangan</th><th></th></tr></thead><tbody id="tbMasjid"></tbody></table></div>
   </div>
+</section>
+
+<!-- ATURAN -->
+<section class="tab" id="tab-aturan">
+  <h2>Aturan khusus</h2>
+  <p class="lead">Aturan ini selalu dipatuhi rotasi otomatis. Saat mengisi jadwal manual, pelanggaran ditampilkan sebagai peringatan dan hanya bisa disimpan sebagai pengecualian setelah dikonfirmasi.</p>
+  <div class="panel">
+    <h3>Larangan masjid per ustadz</h3>
+    <p class="lead" style="margin-bottom:10px">Pilih ustadz, lalu centang satu atau beberapa masjid yang tidak boleh ia datangi.</p>
+    <div class="grid">
+      <div class="field"><label for="lrKhotib">Ustadz</label><select id="lrKhotib"></select></div>
+      <div class="field"><label for="lrCari">Cari masjid</label><input id="lrCari" placeholder="Ketik nama masjid"></div>
+    </div>
+    <div class="chips" id="lrMasjid" style="margin-top:12px"></div>
+    <div class="row"><button class="btn" id="btnLrSimpan">Simpan larangan</button><span id="lrInfo" style="color:var(--muted);font-size:13px"></span></div>
+    <div class="tbl-wrap" style="margin-top:18px"><table><thead><tr><th>Ustadz</th><th>Tidak boleh bertugas di</th><th></th></tr></thead><tbody id="tbLarangan"></tbody></table></div>
+  </div>
+  <div class="panel">
+    <h3 id="kpTitle">Tambah kelompok</h3>
+    <p class="lead" style="margin-bottom:10px">Dari anggota satu kelompok, hanya sejumlah orang yang boleh keluar berkhutbah pada Jumat yang sama. Anda bisa membuat beberapa kelompok, dan satu ustadz boleh masuk lebih dari satu kelompok.</p>
+    <div class="grid">
+      <div class="field"><label for="kpNama">Nama kelompok</label><input id="kpNama" placeholder="Contoh: Pengajar asrama"></div>
+      <div class="field"><label for="kpMaks">Maksimal keluar per Jumat</label><select id="kpMaks"><option value="1">1 orang</option><option value="2">2 orang</option><option value="3">3 orang</option><option value="4">4 orang</option><option value="5">5 orang</option></select></div>
+      <div class="field"><label for="kpAktif">Status</label><select id="kpAktif"><option value="true">Aktif</option><option value="false">Tidak aktif</option></select></div>
+      <div class="field"><label for="kpKet">Keterangan</label><input id="kpKet" placeholder="Opsional, misal alasannya"></div>
+    </div>
+    <div style="margin-top:14px"><span class="flabel">Anggota</span><div class="chips" id="kpAnggota"></div></div>
+    <div class="row"><button class="btn" id="btnKpSimpan">Tambah kelompok</button><button class="btn ghost hidden" id="btnKpBatal">Batal ubah</button></div>
+  </div>
+  <div class="panel tbl-wrap"><table><thead><tr><th>Kelompok</th><th class="num">Maks/Jumat</th><th>Anggota</th><th>Status</th><th></th></tr></thead><tbody id="tbKelompok"></tbody></table></div>
 </section>
 
 <!-- CETAK -->
@@ -485,9 +517,9 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
    Tempel URL /exec dari Apps Script (Deploy → Kelola deployment).
    ===================================================================== */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbz1raPh13Yt9hPiTy0frsXu5F3yS2mMgF0RZjP5ZUYzirDh1gF0kxI9vRmsV4BeK0Ze/exec'
+  API_URL: ''
 };
-const VERSI_APP = '6.2';
+const VERSI_APP = '6.3';
 const ORG = {
   nama: 'Departemen Dakwah dan Kaderisasi',
   induk: 'Dewan Pimpinan Daerah Wahdah Islamiyah Poso',
@@ -503,9 +535,9 @@ const LOGO = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD//gA+Q1JFQVRPUjo
 /* ======================= STATE & UTIL ======================= */
 const S = {
   url: '', pin: '', versiServer: '', mode: '', publikasi: null, pubView: 'list',
-  data: { khotib: [], masjid: [], jadwal: [] },
+  data: { khotib: [], masjid: [], jadwal: [], kelompok: [] },
   preview: [],
-  edit: { khotib: null, masjid: null, jadwal: null },
+  edit: { khotib: null, masjid: null, jadwal: null, kelompok: null },
   detail: null
 };
 const $ = s => document.querySelector(s);
@@ -515,7 +547,7 @@ const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.get
 const parseYmd = s => { const [y, m, d] = String(s).split('-').map(Number); return new Date(y, m - 1, d || 1); };
 const isJumat = s => parseYmd(s).getDay() === 5;
 const pekanKe = s => Math.ceil(parseYmd(s).getDate() / 7);
-const LV = ['', '❶', '❷', '❸'];
+const LV = ['', '❶', '❷', '❸', '❹'];
 const ROM = ['', 'I', 'II', 'III', 'IV', 'V'];
 const BLN = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 const daftar = s => String(s || '').split(/[^0-9]+/).map(Number).filter(Boolean);
@@ -540,7 +572,23 @@ const lv = n => `<span class="lv lv${n}">${LV[n]} Level ${n}</span>`;
 const byId = (list, id) => list.find(x => x.id === id);
 const K = id => byId(S.data.khotib, id);
 const M = id => byId(S.data.masjid, id);
-const bolehDi = (k, m) => k.level <= m.level;
+const daftarId = s => String(s || '').split(',').map(x => x.trim()).filter(Boolean);
+const levelOk = (k, m) => k.level <= m.level;
+const dilarang = (k, m) => daftarId(k.larangan).includes(m.id);
+const bolehDi = (k, m) => levelOk(k, m) && !dilarang(k, m);
+const kelompokAktif = () => (S.data.kelompok || []).filter(g => g.aktif);
+const anggotaDi = (g, ids) => ids.filter(x => daftarId(g.anggota).includes(x));
+/** Kelompok yang kuotanya sudah penuh bila kId ditambahkan ke daftar khotib yang bertugas (ids) pada Jumat yang sama. */
+const kelompokPenuh = (kId, ids) => kelompokAktif().filter(g => daftarId(g.anggota).includes(kId) && anggotaDi(g, ids.filter(x => x !== kId)).length >= g.maks);
+/** Daftar pelanggaran aturan untuk penugasan k → m pada tanggal t. */
+function pelanggaran(k, m, t, abaikanId) {
+  const out = [];
+  if (!levelOk(k, m)) out.push(`${k.nama} (Level ${k.level}) melebihi level ${m.nama} (Level ${m.level}).`);
+  if (dilarang(k, m)) out.push(`${k.nama} tidak boleh bertugas di ${m.nama} (aturan larangan).`);
+  const ids = S.data.jadwal.filter(j => j.tanggal === t && sah(j) && j.id !== abaikanId).map(j => j.khotibId);
+  kelompokPenuh(k.id, ids).forEach(g => out.push(`Kelompok "${g.nama}" hanya boleh ${g.maks} orang per Jumat; sudah bertugas: ${anggotaDi(g, ids).map(x => K(x)?.nama || '?').join(', ')}.`));
+  return out;
+}
 const sah = j => j.status !== 'BATAL';
 const sortNama = (a, b) => a.nama.localeCompare(b.nama, 'id');
 const sortLvNama = (a, b) => a.level - b.level || sortNama(a, b);
@@ -668,6 +716,7 @@ function renderAll() {
   renderRingkasan();
   renderKhotib();
   renderMasjid();
+  renderAturan();
   isiPilihanJadwal();
   renderJadwal();
   if (S.preview.length) renderPreview();
@@ -725,7 +774,7 @@ function renderKhotib() {
   const list = S.data.khotib.filter(k => !q || k.nama.toLowerCase().includes(q)).sort((a, b) => (b.aktif - a.aktif) || sortLvNama(a, b));
   $('#tbKhotib').innerHTML = list.length ? list.map(k => `
     <tr class="${k.aktif ? '' : 'off'}">
-      <td><b>${esc(k.nama)}</b></td><td>${lv(k.level)}</td><td>${esc(k.kontak)}</td>
+      <td><b>${esc(k.nama)}</b>${infoAturan(k)}</td><td>${lv(k.level)}</td><td>${esc(k.kontak)}</td>
       <td>${k.aktif ? '<span class="tag">Aktif</span>' : '<span class="tag warn">Tidak aktif</span>'}</td>
       <td class="num">${bi[k.id] || 0}</td><td class="num">${tot[k.id] || 0}</td><td style="font-size:13px;color:var(--muted)">${esc(k.catatan)}</td>
       <td class="act"><button class="btn sm ghost" onclick="ubahKhotib('${k.id}')">Ubah</button>
@@ -830,6 +879,117 @@ async function simpanMasjid() {
   } catch (e) { toast(e.message, 'bad'); }
 }
 
+/* ---------- Aturan: larangan & kelompok ---------- */
+function infoAturan(k) {
+  const t = [];
+  const n = daftarId(k.larangan).filter(id => M(id)).length;
+  if (n) t.push(`<span class="tag bad">dilarang di ${n} masjid</span>`);
+  kelompokAktif().filter(g => daftarId(g.anggota).includes(k.id)).forEach(g => t.push(`<span class="tag warn">${esc(g.nama)} · maks ${g.maks}</span>`));
+  return t.length ? `<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">${t.join('')}</div>` : '';
+}
+
+function renderAturan() {
+  // editor larangan
+  const sel = $('#lrKhotib'), v = sel.value;
+  sel.innerHTML = '<option value="">Pilih ustadz</option>' + [...S.data.khotib].sort((a, b) => (b.aktif - a.aktif) || sortLvNama(a, b))
+    .map(k => `<option value="${k.id}">${LV[k.level]} ${esc(k.nama)}${daftarId(k.larangan).length ? ' · ' + daftarId(k.larangan).length + ' larangan' : ''}</option>`).join('');
+  sel.value = v;
+  isiLarangan();
+  // daftar larangan
+  const ada = S.data.khotib.filter(k => daftarId(k.larangan).some(id => M(id))).sort(sortLvNama);
+  $('#tbLarangan').innerHTML = ada.length ? ada.map(k => `<tr><td><b>${esc(k.nama)}</b></td>
+      <td>${daftarId(k.larangan).map(M).filter(Boolean).map(m => esc(m.nama)).join(', ')}</td>
+      <td class="act"><button class="btn sm ghost" onclick="pilihLarangan('${k.id}')">Ubah</button>
+        <button class="btn sm danger" onclick="hapusLarangan('${k.id}')">Hapus larangan</button></td></tr>`).join('')
+    : '<tr><td colspan="3" class="empty">Belum ada larangan.</td></tr>';
+  // anggota kelompok (pertahankan centang yang sedang diisi)
+  const dipilih = ambilChips('#kpAnggota').split(',').filter(Boolean);
+  $('#kpAnggota').innerHTML = [...S.data.khotib].filter(k => k.aktif || dipilih.includes(k.id)).sort(sortLvNama)
+    .map(k => `<label><input type="checkbox" value="${k.id}" ${dipilih.includes(k.id) ? 'checked' : ''}> ${LV[k.level]} ${esc(k.nama)}</label>`).join('');
+  // daftar kelompok
+  const gs = [...(S.data.kelompok || [])].sort((a, b) => (b.aktif - a.aktif) || sortNama(a, b));
+  $('#tbKelompok').innerHTML = gs.length ? gs.map(g => `<tr class="${g.aktif ? '' : 'off'}">
+      <td><b>${esc(g.nama)}</b>${g.keterangan ? `<div style="font-size:12.5px;color:var(--muted)">${esc(g.keterangan)}</div>` : ''}</td>
+      <td class="num"><b>${g.maks}</b> dari ${daftarId(g.anggota).length}</td>
+      <td>${daftarId(g.anggota).map(K).filter(Boolean).map(k => esc(k.nama)).join(', ')}</td>
+      <td>${g.aktif ? '<span class="tag">Aktif</span>' : '<span class="tag warn">Tidak aktif</span>'}</td>
+      <td class="act"><button class="btn sm ghost" onclick="ubahKelompok('${g.id}')">Ubah</button>
+        <button class="btn sm danger" onclick="hapus('kelompok','${g.id}')">Hapus</button></td></tr>`).join('')
+    : '<tr><td colspan="5" class="empty">Belum ada kelompok.</td></tr>';
+}
+
+function isiLarangan() {
+  const k = K($('#lrKhotib').value);
+  if (!k) { $('#lrMasjid').innerHTML = '<span style="color:var(--muted)">Pilih ustadz terlebih dahulu.</span>'; $('#lrInfo').textContent = ''; return; }
+  const lar = daftarId(k.larangan);
+  const ms = S.data.masjid.filter(m => (m.aktif && levelOk(k, m)) || lar.includes(m.id)).sort(sortLvNama);
+  $('#lrMasjid').innerHTML = ms.map(m => `<label data-nama="${esc(m.nama.toLowerCase())}"><input type="checkbox" value="${m.id}" ${lar.includes(m.id) ? 'checked' : ''}> ${LV[m.level]} ${esc(m.nama)}</label>`).join('');
+  $('#lrInfo').textContent = `Hanya masjid yang sesuai level ${k.nama} yang ditampilkan.`;
+  saringLarangan();
+}
+
+/** Pencarian hanya menyembunyikan chip; centang yang belum disimpan tetap utuh. */
+function saringLarangan() {
+  const q = $('#lrCari').value.trim().toLowerCase();
+  document.querySelectorAll('#lrMasjid label').forEach(l => l.style.display = !q || l.dataset.nama.includes(q) ? '' : 'none');
+}
+
+function pilihLarangan(id) {
+  $('#lrKhotib').value = id; $('#lrCari').value = '';
+  isiLarangan();
+  $('#lrKhotib').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function simpanLarangan() {
+  const k = K($('#lrKhotib').value);
+  if (!k) return toast('Pilih ustadz terlebih dahulu.', 'bad');
+  const ids = [...document.querySelectorAll('#lrMasjid input:checked')].map(i => i.value);
+  try {
+    await api('update', { sheet: 'khotib', id: k.id, data: { larangan: ids.join(',') } });
+    toast(ids.length ? `${k.nama} dilarang di ${ids.length} masjid.` : `Larangan ${k.nama} dihapus.`, 'ok');
+  } catch (e) { toast(e.message, 'bad'); }
+}
+
+async function hapusLarangan(id) {
+  const k = K(id); if (!k || !confirm(`Hapus semua larangan masjid untuk ${k.nama}?`)) return;
+  try { await api('update', { sheet: 'khotib', id, data: { larangan: '' } }); toast('Larangan dihapus.', 'ok'); }
+  catch (e) { toast(e.message, 'bad'); }
+}
+
+function resetFormKelompok() {
+  S.edit.kelompok = null;
+  $('#kpNama').value = ''; $('#kpKet').value = ''; $('#kpMaks').value = '1'; $('#kpAktif').value = 'true';
+  document.querySelectorAll('#kpAnggota input').forEach(i => i.checked = false);
+  $('#kpTitle').textContent = 'Tambah kelompok';
+  $('#btnKpSimpan').textContent = 'Tambah kelompok';
+  $('#btnKpBatal').classList.add('hidden');
+}
+
+function ubahKelompok(id) {
+  const g = byId(S.data.kelompok || [], id); if (!g) return;
+  S.edit.kelompok = id;
+  $('#kpNama').value = g.nama; $('#kpKet').value = g.keterangan || ''; $('#kpMaks').value = String(Math.min(g.maks, 5)); $('#kpAktif').value = String(g.aktif);
+  const ang = daftarId(g.anggota);
+  document.querySelectorAll('#kpAnggota input').forEach(i => i.checked = ang.includes(i.value));
+  $('#kpTitle').textContent = 'Ubah kelompok ' + g.nama;
+  $('#btnKpSimpan').textContent = 'Simpan perubahan';
+  $('#btnKpBatal').classList.remove('hidden');
+  $('#kpNama').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function simpanKelompok() {
+  const anggota = ambilChips('#kpAnggota').split(',').filter(Boolean);
+  const data = { nama: $('#kpNama').value.trim(), maks: Number($('#kpMaks').value), anggota: anggota.join(','), aktif: $('#kpAktif').value === 'true', keterangan: $('#kpKet').value.trim() };
+  if (!data.nama) return toast('Nama kelompok wajib diisi.', 'bad');
+  if (anggota.length < 2) return toast('Pilih minimal 2 anggota.', 'bad');
+  if (anggota.length <= data.maks && !confirm(`Anggota hanya ${anggota.length} orang dan maksimal ${data.maks} per Jumat, jadi aturan ini belum membatasi apa pun. Tetap simpan?`)) return;
+  try {
+    if (S.edit.kelompok) { await api('update', { sheet: 'kelompok', id: S.edit.kelompok, data }); toast('Kelompok disimpan.', 'ok'); }
+    else { await api('create', { sheet: 'kelompok', data }); toast(`Kelompok "${data.nama}" dibuat.`, 'ok'); }
+    resetFormKelompok();
+  } catch (e) { toast(/tidak dikenal/.test(e.message) ? 'Kode.gs di server belum v6.3. Tempel Kode.gs terbaru lalu buat Versi baru.' : e.message, 'bad'); }
+}
+
 /* ---------- Hapus ---------- */
 async function hapus(sheet, id) {
   const item = byId(S.data[sheet], id);
@@ -876,7 +1036,9 @@ function isiPilihanKhotib(pilih) {
   });
   $('#jdKhotib').innerHTML = '<option value="">Pilih khotib</option>' + list.map(k => {
     const cat = [];
-    if (m && !bolehDi(k, m)) cat.push('level tidak sesuai');
+    if (m && !levelOk(k, m)) cat.push('level tidak sesuai');
+    if (m && dilarang(k, m)) cat.push('dilarang di masjid ini');
+    if (t && !sibuk.has(k.id) && kelompokPenuh(k.id, [...sibuk]).length) cat.push('kuota kelompok penuh');
     if (sibuk.has(k.id)) cat.push('sudah bertugas');
     if (!k.aktif) cat.push('tidak aktif');
     return `<option value="${k.id}">${LV[k.level]} ${esc(k.nama)} (${bln[k.id] || 0}× bln ini)${cat.length ? ' — ' + cat.join(', ') : ''}</option>`;
@@ -900,7 +1062,8 @@ function petunjukJadwal() {
     if (ada) n.push(['bad', `${k.nama} sudah bertugas di ${M(ada.masjidId)?.nama || 'masjid lain'} pada tanggal ini.`]);
   }
   if (m && k) {
-    if (!bolehDi(k, m)) n.push(['warn', `${k.nama} (${LV[k.level]}) tidak sesuai level ${m.nama} (${LV[m.level]}). Tetap bisa disimpan sebagai pengecualian.`]);
+    const lg = batal ? [] : pelanggaran(k, m, t, S.edit.jadwal);
+    if (lg.length) lg.forEach(x => n.push(['warn', x + ' Tetap bisa disimpan sebagai pengecualian.']));
     else {
       const riw = S.data.jadwal.filter(j => j.masjidId === m.id && j.khotibId === k.id && sah(j) && j.id !== S.edit.jadwal).map(j => j.tanggal).sort();
       n.push(['ok', riw.length ? `${k.nama} sudah ${riw.length}× di ${m.nama}, terakhir ${tglPanjang(riw[riw.length - 1])}.` : `${k.nama} belum pernah berkhutbah di ${m.nama}.`]);
@@ -938,8 +1101,9 @@ async function simpanJadwal() {
   const m = M(masjidId), k = K(khotibId), status = $('#jdStatus').value;
   if (!isJumat(tanggal) && !confirm(`${tglPanjang(tanggal)} bukan hari Jumat. Tetap simpan?`)) return;
   let override = false;
-  if (!bolehDi(k, m) && status !== 'BATAL') {
-    if (!confirm(`${k.nama} (Level ${k.level}) tidak sesuai level ${m.nama} (Level ${m.level}).\n\nSimpan sebagai pengecualian?`)) return;
+  const lg = status === 'BATAL' ? [] : pelanggaran(k, m, tanggal, S.edit.jadwal);
+  if (lg.length) {
+    if (!confirm(lg.join('\n') + '\n\nSimpan sebagai pengecualian?')) return;
     override = true;
   }
   const data = { tanggal, masjidId, khotibId, status, catatan: $('#jdCatatan').value.trim(), override };
@@ -1036,10 +1200,15 @@ function buatRotasi(tanggalList, opsi = {}) {
     const ada = S.data.jadwal.filter(j => j.tanggal === t);
     const kSibuk = new Set(ada.filter(sah).map(j => j.khotibId));
     const mKosong = ms.filter(m => masjidTerjadwal(m, t) && !ada.some(j => j.masjidId === m.id));
-    const kBebas = kh.filter(k => !kSibuk.has(k.id));
     if (!mKosong.length) continue;
     const hariIni = parseYmd(t).getTime(), ym = t.slice(0, 7);
-    const biaya = mKosong.map(m => {
+    const sudahTugas = [...kSibuk];
+    // Anggota kelompok yang kuotanya sudah penuh oleh jadwal yang ada tidak ikut dipilih.
+    const tolak = new Set(kh.filter(k => kelompokPenuh(k.id, sudahTugas).length).map(k => k.id));
+    let kBebas, biaya, pilih, dipilih;
+    for (let putar = 0; putar < 25; putar++) {
+    kBebas = kh.filter(k => !kSibuk.has(k.id) && !tolak.has(k.id));
+    biaya = mKosong.map(m => {
       const layak = kh.filter(k => bolehDi(k, m));
       const sama = layak.filter(k => k.level === m.level);
       const pool = gapW && sama.length ? sama : layak;
@@ -1055,13 +1224,30 @@ function buatRotasi(tanggalList, opsi = {}) {
         return c;
       }).concat(mKosong.map(() => KOSONG));
     });
-    const pilih = hungaria(biaya);
-    mKosong.forEach((m, i) => {
+    pilih = hungaria(biaya);
+    dipilih = mKosong.map((m, i) => {
       const j = pilih[i];
-      const k = j >= 0 && j < kBebas.length && biaya[i][j] < KOSONG ? kBebas[j] : null;
-      if (!k) { hasil.push({ tanggal: t, masjidId: m.id, khotibId: '' }); return; }
-      catat(m.id, k.id, t);
-      hasil.push({ tanggal: t, masjidId: m.id, khotibId: k.id, lewatBatas: biaya[i][j] >= LEWAT_BATAS });
+      return j >= 0 && j < kBebas.length && biaya[i][j] < KOSONG ? { k: kBebas[j], c: biaya[i][j] } : null;
+    });
+    // Periksa kuota kelompok; bila terlampaui, pertahankan anggota dengan biaya terendah dan ulangi tanpa anggota lain.
+    let langgar = false;
+    kelompokAktif().forEach(g => {
+      const ang = daftarId(g.anggota);
+      const sisa = Math.max(0, g.maks - anggotaDi(g, sudahTugas).length);
+      const baru = dipilih.filter(x => x && ang.includes(x.k.id)).sort((a, b) => a.c - b.c);
+      if (baru.length > sisa) {
+        langgar = true;
+        const tetap = new Set(baru.slice(0, sisa).map(x => x.k.id));
+        ang.forEach(id => { if (!tetap.has(id)) tolak.add(id); });
+      }
+    });
+    if (!langgar) break;
+    }
+    mKosong.forEach((m, i) => {
+      const x = dipilih[i];
+      if (!x) { hasil.push({ tanggal: t, masjidId: m.id, khotibId: '' }); return; }
+      catat(m.id, x.k.id, t);
+      hasil.push({ tanggal: t, masjidId: m.id, khotibId: x.k.id, lewatBatas: x.c >= LEWAT_BATAS });
     });
   }
   return hasil;
@@ -1093,7 +1279,7 @@ function renderPreview() {
       <h3 style="margin:0">Pratinjau: ${P.filter(p => p.khotibId).length} jadwal di ${Object.keys(grup).length} Jumat</h3>
       <div class="row" style="margin:0"><button class="btn ghost" onclick="S.preview=[];renderPreview()">Buang pratinjau</button>
       <button class="btn" onclick="simpanPreview()">Simpan semua</button></div></div>`;
-  if (kosong) h += `<div class="note warn">${kosong} slot tidak bisa diisi karena tidak ada khotib yang sesuai level dan masih bebas. Slot itu tidak ikut disimpan.</div>`;
+  if (kosong) h += `<div class="note warn">${kosong} slot tidak bisa diisi karena tidak ada khotib yang sesuai level, tidak terkena larangan/kuota kelompok, dan masih bebas. Slot itu tidak ikut disimpan.</div>`;
   if (lewat) h += `<div class="note warn">${lewat} penugasan melewati batas per bulan karena kekurangan khotib; ditandai "lewat batas".</div>`;
   h += Object.keys(grup).sort().map(t => {
     const dipakai = new Set(grup[t].map(i => P[i].khotibId).filter(Boolean));
@@ -1101,7 +1287,8 @@ function renderPreview() {
     return `<div class="group-h"><b>${tglPanjang(t)} · Pekan ${ROM[pekanKe(t)]}</b><span style="color:var(--muted);font-size:13px">${grup[t].length} masjid</span></div><div class="tbl-wrap"><table><tbody>` +
       grup[t].map(i => {
         const p = P[i], m = M(p.masjidId);
-        const opsi = S.data.khotib.filter(k => k.aktif && bolehDi(k, m) && (k.id === p.khotibId || !dipakai.has(k.id))).sort(sortLvNama);
+        const lain = [...dipakai].filter(x => x !== p.khotibId);
+        const opsi = S.data.khotib.filter(k => k.aktif && bolehDi(k, m) && (k.id === p.khotibId || (!dipakai.has(k.id) && !kelompokPenuh(k.id, lain).length))).sort(sortLvNama);
         return `<tr><td style="width:42%">${LV[m.level]} ${esc(m.nama)}</td>
           <td><select onchange="gantiPreview(${i},this.value)" style="padding:7px;border:1px solid #c5cec8;border-radius:7px;max-width:100%">
             <option value="">${p.khotibId ? '— kosongkan —' : '— tidak ada khotib —'}</option>
@@ -1257,7 +1444,7 @@ function isiBulanan(b, opsi = {}) {
   const ms = S.data.masjid.filter(m => opsi.tampilSemua ? m.aktif : (tgl.some(t => masjidTerjadwal(m, t)) || S.data.jadwal.some(j => j.masjidId === m.id && tgl.includes(j.tanggal))))
     .sort(sortCetak);
   let no = 0, body = '';
-  [1, 2, 3].forEach(L => {
+  [1, 2, 3, 4].forEach(L => {
     const grup = ms.filter(m => m.level === L);
     if (!grup.length) return;
     body += `<tr class="lvrow"><td colspan="${tgl.length + 2}">${LV[L]} Masjid Level ${L}</td></tr>`;
@@ -1521,7 +1708,7 @@ function isiJumatPublik(t) {
   const ms = S.data.masjid.filter(m => masjidTerjadwal(m, t) || S.data.jadwal.some(j => j.masjidId === m.id && j.tanggal === t)).sort(sortCetak);
   if (!ms.length) return '<div class="empty">Tidak ada masjid yang dijadwalkan pada Jumat ini.</div>';
   let no = 0, body = '';
-  [1, 2, 3].forEach(L => {
+  [1, 2, 3, 4].forEach(L => {
     const grup = ms.filter(m => m.level === L);
     if (!grup.length) return;
     body += `<tr class="lvrow"><td colspan="3">${LV[L]} Masjid Level ${L}</td></tr>`;
@@ -1657,6 +1844,10 @@ function pasangEvent() {
   $('#btnPng').onclick = unduhPng; $('#btnPdf').onclick = unduhPdf; $('#btnPrint').onclick = () => { renderCetak(); window.print(); };
 
   $('#btnImpor').onclick = imporData;
+  $('#lrKhotib').onchange = () => { $('#lrCari').value = ''; isiLarangan(); };
+  $('#lrCari').oninput = saringLarangan;
+  $('#btnLrSimpan').onclick = simpanLarangan;
+  $('#btnKpSimpan').onclick = simpanKelompok; $('#btnKpBatal').onclick = resetFormKelompok;
   $('#btnSimpanPub').onclick = simpanPublikasi;
   document.querySelectorAll('input[name=pubMode]').forEach(r => r.onchange = () => { S.pubDiubah = true; aturPubBulan(); });
   $('#pubBulanChips').onchange = () => { S.pubDiubah = true; };
