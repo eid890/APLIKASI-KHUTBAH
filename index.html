@@ -19,38 +19,34 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;min-height:100vh}
-button,input,select{font:inherit;color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid #7fb69b;outline-offset:2px}
 .hidden{display:none!important}
 
-/* ---------- Login ---------- */
 #login{min-height:100vh;display:grid;place-items:center;padding:24px}
 .login-box{background:var(--paper);width:100%;max-width:420px;border-radius:14px;padding:32px 28px;border:1px solid var(--line)}
 .login-box h1{font-size:24px;line-height:1.25;color:var(--green);margin-bottom:4px}
 .login-box p.sub{color:var(--muted);margin-bottom:24px}
 
-/* ---------- Header & nav ---------- */
 header{background:var(--green);color:#fff}
-.head-in{max-width:1180px;margin:auto;padding:18px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.head-in{max-width:1240px;margin:auto;padding:18px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
 .brand h1{font-size:21px;font-weight:700;line-height:1.2}
 .brand span{opacity:.8;font-size:13px}
 .head-act{display:flex;gap:10px;align-items:center;font-size:13px}
-#sync{opacity:.85}
-nav{max-width:1180px;margin:14px auto 0;padding:0 12px;display:flex;gap:2px;overflow-x:auto}
+nav{max-width:1240px;margin:14px auto 0;padding:0 12px;display:flex;gap:2px;overflow-x:auto}
 nav button{background:none;border:0;color:#d6e8de;padding:11px 14px;cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;font-weight:600;font-size:14px}
 nav button[aria-selected=true]{background:var(--bg);color:var(--green)}
-main{max-width:1180px;margin:auto;padding:24px 20px 60px}
+main{max-width:1240px;margin:auto;padding:24px 20px 60px}
 section.tab{display:none}
 section.tab.on{display:block}
 h2{font-size:20px;margin-bottom:4px}
-.lead{color:var(--muted);margin-bottom:18px;max-width:70ch}
+.lead{color:var(--muted);margin-bottom:18px;max-width:78ch}
 h3{font-size:16px;margin-bottom:12px}
 
-/* ---------- Panels ---------- */
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:18px}
-.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.field label{display:block;font-weight:600;font-size:13px;margin-bottom:5px}
-.field input,.field select{width:100%;padding:10px 12px;border:1px solid #c5cec8;border-radius:8px;background:#fff}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.field label,.flabel{display:block;font-weight:600;font-size:13px;margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid #c5cec8;border-radius:8px;background:#fff}
 .field small{display:block;color:var(--muted);font-size:12px;margin-top:4px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
 .btn{border:1px solid transparent;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;background:var(--green);color:#fff}
@@ -63,20 +59,27 @@ h3{font-size:16px;margin-bottom:12px}
 .btn.sm{padding:6px 10px;font-size:13px}
 .btn.light{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.3)}
 
-/* ---------- Tables ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips label{display:flex;align-items:center;gap:5px;border:1px solid #c5cec8;border-radius:20px;padding:5px 11px;font-size:13px;cursor:pointer;background:#fff;user-select:none}
+.chips input{accent-color:var(--green)}
+.chips label:has(input:checked){background:var(--green-bg);border-color:var(--green2);color:var(--green);font-weight:600}
+
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th{text-align:left;font-size:12.5px;color:var(--muted);font-weight:600;padding:9px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
 td{padding:9px 10px;border-bottom:1px solid #e7ece8;vertical-align:middle}
 td.act{white-space:nowrap;text-align:right}
+td.num,th.num{text-align:center}
 tr.off td{color:#8b968f}
+tr.clk{cursor:pointer}
+tr.clk:hover td{background:#f5f8f6}
 .empty{padding:26px;text-align:center;color:var(--muted)}
 
 .lv{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
 .lv1{background:#e7f0ea;color:#2d6a4f}
-.lv2{background:#dde9f5;color:#1f4e79}
-.lv3{background:#efe3f3;color:#6a2c80}
-.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:20px;background:#eef0ef;color:var(--muted)}
+.lv2{background:#fdf1d8;color:#8a5a00}
+.lv3{background:#fbe4e1;color:#9b2c22}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:20px;background:#eef0ef;color:var(--muted);white-space:nowrap}
 .tag.warn{background:var(--gold-bg);color:var(--gold)}
 .tag.bad{background:var(--red-bg);color:var(--red)}
 
@@ -85,32 +88,37 @@ tr.off td{color:#8b968f}
 .note.ok{background:var(--green-bg);color:#1c4a37}
 .note.bad{background:var(--red-bg);color:#7c231d}
 
-/* ---------- Ringkasan ---------- */
 .next{background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--green);border-radius:var(--r);padding:22px;margin-bottom:18px}
-.next .date{font-size:26px;font-weight:700;color:var(--green);line-height:1.2;margin-bottom:12px}
+.next .date{font-size:26px;font-weight:700;color:var(--green);line-height:1.2;margin-bottom:4px}
 .counts{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:18px;color:var(--muted)}
 .counts b{font-size:22px;color:var(--ink);display:block;line-height:1.1}
 .bar{height:8px;background:#e4e9e5;border-radius:6px;overflow:hidden;min-width:90px}
 .bar i{display:block;height:100%;background:var(--green2)}
-
 .group-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 0 6px;border-bottom:2px solid var(--green);margin-top:10px}
 .group-h b{color:var(--green)}
 
-/* ---------- Print sheet ---------- */
-#printArea{background:#fff;color:#111;padding:36px 34px;max-width:820px;margin:auto;border:1px solid var(--line)}
-.kop{text-align:center;border-bottom:3px double #1f5a44;padding-bottom:12px;margin-bottom:18px}
-.kop h2{font-size:20px;color:#1f5a44;margin:0}
+/* ---------- lembar cetak ---------- */
+#printArea{background:#fff;color:#111;padding:30px;margin:auto;border:1px solid var(--line);overflow-x:auto}
+#printArea.portrait{max-width:820px}
+#printArea.landscape{max-width:1160px}
+.kop{text-align:center;border-bottom:3px double #1f5a44;padding-bottom:10px;margin-bottom:14px}
+.kop h2{font-size:19px;color:#1f5a44;margin:0}
 .kop p{font-size:13px;color:#444}
-.ptitle{text-align:center;font-weight:700;font-size:17px;margin-bottom:4px}
-.psub{text-align:center;color:#444;margin-bottom:16px;font-size:14px}
-#printArea table th{color:#fff;background:#1f5a44;border:1px solid #1f5a44;font-size:13px}
-#printArea table td{border:1px solid #c9d3cc;font-size:13.5px}
-#printArea .pdate td{background:#e3efe8;font-weight:700;color:#1f5a44}
-.pfoot{margin-top:28px;display:flex;justify-content:flex-end;font-size:13.5px}
+.ptitle{text-align:center;font-weight:700;font-size:16px}
+.psub{text-align:center;color:#444;margin-bottom:12px;font-size:13.5px}
+#printArea table{font-size:12px}
+#printArea th{color:#fff;background:#1f5a44;border:1px solid #1f5a44;font-size:12px;text-align:center;white-space:normal}
+#printArea td{border:1px solid #c9d3cc;padding:5px 7px}
+#printArea td.na{background:#6b6f6d}
+#printArea td.kosong{background:#fff7e0}
+#printArea tr.lvrow td{background:#e3efe8;font-weight:700;color:#1f5a44}
+#printArea .btl{color:#a8322a;font-weight:600}
+#printArea .cad td{vertical-align:top;font-size:11.5px}
+.pcat{margin-top:14px;font-size:12.5px;white-space:pre-wrap}
+.pfoot{margin-top:22px;display:flex;justify-content:flex-end;font-size:13px}
 .pfoot div{text-align:center;min-width:220px}
 
-/* ---------- Toast ---------- */
-#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;z-index:50;width:min(92vw,460px)}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;z-index:50;width:min(92vw,480px)}
 .t{padding:12px 16px;border-radius:9px;background:var(--ink);color:#fff;font-size:14px;box-shadow:0 6px 20px rgba(20,40,30,.25)}
 .t.bad{background:var(--red)}
 .t.ok{background:var(--green)}
@@ -119,27 +127,27 @@ tr.off td{color:#8b968f}
   main{padding:18px 12px 60px}
   .panel{padding:16px}
   .next .date{font-size:21px}
-  #printArea{padding:20px 14px}
+  #printArea{padding:14px}
 }
 @media print{
   body{background:#fff}
   body *{visibility:hidden}
   #printArea,#printArea *{visibility:visible}
-  #printArea{position:absolute;left:0;top:0;border:0;max-width:none;width:100%}
+  #printArea{position:absolute;left:0;top:0;border:0;max-width:none;width:100%;padding:0}
+  #printArea td.na{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<style id="pageStyle">@page{size:A4 portrait;margin:12mm}</style>
 </head>
 <body>
 
-<!-- ================= LOGIN ================= -->
 <div id="login">
   <div class="login-box">
     <h1>Jadwal Khotbah Jumat</h1>
     <p class="sub">Pondok Pesantren Wihdatul Ummah Poso</p>
     <div class="field" id="urlField">
       <label for="inUrl">Alamat API (URL Apps Script)</label>
-      <input id="inUrl" placeholder="https://script.google.com/macros/s/AKfycbw61ss4F686Xq_HveBjEBLsTp0cdkgHcZXqp_jq6sNM4vro3nFNyWWWWvAem0HaD4mi/exec" autocomplete="off">
+      <input id="inUrl" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off">
       <small>Salin dari Apps Script → Deploy → Kelola deployment. Harus berakhiran <b>/exec</b>.</small>
     </div>
     <div class="field" style="margin-top:14px">
@@ -155,7 +163,6 @@ tr.off td{color:#8b968f}
   </div>
 </div>
 
-<!-- ================= APLIKASI ================= -->
 <div id="app" class="hidden">
 <header>
   <div class="head-in">
@@ -170,6 +177,7 @@ tr.off td{color:#8b968f}
     <button data-tab="ringkasan" aria-selected="true">Ringkasan</button>
     <button data-tab="jadwal">Jadwal</button>
     <button data-tab="rotasi">Rotasi otomatis</button>
+    <button data-tab="rekap">Rekap & riwayat</button>
     <button data-tab="khotib">Khotib</button>
     <button data-tab="masjid">Masjid</button>
     <button data-tab="cetak">Cetak</button>
@@ -180,26 +188,23 @@ tr.off td{color:#8b968f}
 <main>
 <!-- RINGKASAN -->
 <section class="tab on" id="tab-ringkasan">
+  <div id="kosongDb"></div>
   <div class="next" id="nextBox"></div>
   <div class="counts" id="counts"></div>
-  <div class="panel">
-    <h3>Putaran rotasi per masjid</h3>
-    <p class="lead" style="margin-bottom:10px">Satu putaran selesai ketika semua khotib yang sesuai level sudah pernah bertugas di masjid itu.</p>
-    <div class="tbl-wrap"><table><thead><tr><th>Masjid</th><th>Level</th><th>Putaran</th><th>Progres</th><th></th></tr></thead><tbody id="tbProgres"></tbody></table></div>
-  </div>
 </section>
 
 <!-- JADWAL -->
 <section class="tab" id="tab-jadwal">
   <h2>Jadwal</h2>
-  <p class="lead">Tambah atau ubah jadwal satu per satu. Untuk mengisi banyak pekan sekaligus, pakai Rotasi otomatis.</p>
+  <p class="lead">Tambah, ganti, atau batalkan jadwal satu per satu. Untuk mengisi satu bulan penuh, pakai Rotasi otomatis.</p>
   <div class="panel">
     <h3 id="jdTitle">Tambah jadwal</h3>
     <div class="grid">
       <div class="field"><label for="jdTanggal">Tanggal</label><input type="date" id="jdTanggal"></div>
       <div class="field"><label for="jdMasjid">Masjid</label><select id="jdMasjid"></select></div>
       <div class="field"><label for="jdKhotib">Khotib</label><select id="jdKhotib"></select></div>
-      <div class="field"><label for="jdCatatan">Catatan</label><input id="jdCatatan" placeholder="Opsional, misal tema khotbah"></div>
+      <div class="field"><label for="jdStatus">Status</label><select id="jdStatus"><option value="">Terjadwal</option><option value="BATAL">Batal</option></select></div>
+      <div class="field"><label for="jdCatatan">Catatan</label><input id="jdCatatan" placeholder="Misal: sakit, diganti, tema"></div>
     </div>
     <div id="jdHint"></div>
     <div class="row">
@@ -219,64 +224,113 @@ tr.off td{color:#8b968f}
 <!-- ROTASI -->
 <section class="tab" id="tab-rotasi">
   <h2>Rotasi otomatis</h2>
-  <p class="lead">Sistem memilih khotib untuk setiap masjid aktif: hanya yang levelnya sesuai, tidak ada khotib bertugas di dua masjid pada hari yang sama, dan pasangan ustadz–masjid tidak terulang sebelum semua khotib mendapat giliran. Jadwal yang sudah ada tidak ditimpa.</p>
+  <p class="lead">Sistem mengisi setiap masjid aktif hanya pada pekan yang ditentukan untuk masjid itu. Aturannya: level khotib harus sesuai, tidak ada khotib di dua masjid pada Jumat yang sama, dan pasangan ustadz–masjid tidak diulang sebelum khotib lain mendapat giliran. Riwayat jadwal ikut diperhitungkan. Jadwal yang sudah ada tidak ditimpa.</p>
   <div class="panel">
     <div class="grid">
-      <div class="field"><label for="rtMulai">Mulai Jumat</label><input type="date" id="rtMulai"></div>
-      <div class="field"><label for="rtMinggu">Jumlah pekan</label>
-        <select id="rtMinggu"><option value="1">1 pekan</option><option value="4" selected>4 pekan (±1 bulan)</option><option value="8">8 pekan</option><option value="13">13 pekan (±3 bulan)</option><option value="26">26 pekan (±6 bulan)</option><option value="52">52 pekan (1 tahun)</option></select></div>
+      <div class="field"><label for="rtBulan">Mulai bulan</label><input type="month" id="rtBulan"></div>
+      <div class="field"><label for="rtJumlah">Lama</label>
+        <select id="rtJumlah"><option value="1">1 bulan</option><option value="2">2 bulan</option><option value="3">3 bulan</option><option value="6">6 bulan</option><option value="12">12 bulan</option></select></div>
+      <div class="field"><label for="rtPrioritas">Pemilihan level</label>
+        <select id="rtPrioritas"><option value="sama">Utamakan level yang sama dengan masjid</option><option value="campur">Campur semua level yang diizinkan</option></select>
+        <small>"Utamakan" menjaga khotib ❸ di masjid ❸, dan khotib ❶ mengisi masjid ❶.</small></div>
+      <div class="field"><label for="rtBatas">Batas tugas per khotib</label>
+        <select id="rtBatas"><option value="0">Tanpa batas</option><option value="2">2 kali per bulan</option><option value="3" selected>3 kali per bulan</option><option value="4">4 kali per bulan</option></select></div>
     </div>
     <div class="row"><button class="btn" id="btnRtBuat">Buat pratinjau</button></div>
   </div>
   <div id="rtPreview"></div>
 </section>
 
+<!-- REKAP -->
+<section class="tab" id="tab-rekap">
+  <h2>Rekap & riwayat</h2>
+  <p class="lead">Jumlah khotbah per khotib per bulan (jadwal yang batal tidak dihitung). Klik nama untuk melihat riwayatnya.</p>
+  <div class="panel">
+    <div class="grid">
+      <div class="field"><label for="rkDari">Dari bulan</label><input type="month" id="rkDari"></div>
+      <div class="field"><label for="rkSampai">Sampai bulan</label><input type="month" id="rkSampai"></div>
+    </div>
+    <div class="row"><button class="btn ghost" id="btnCsv">Unduh rekap (CSV/Excel)</button></div>
+  </div>
+  <div class="panel tbl-wrap" id="rkTabel"></div>
+  <div class="panel" id="rkDetail"><p class="empty">Klik nama khotib atau masjid untuk melihat riwayatnya.</p></div>
+  <div class="panel">
+    <h3>Riwayat per masjid</h3>
+    <div class="field" style="max-width:420px"><select id="rkMasjid"></select></div>
+    <div id="rkMasjidOut"></div>
+  </div>
+  <div class="panel">
+    <h3>Putaran rotasi per masjid</h3>
+    <p class="lead" style="margin-bottom:10px">Satu putaran selesai ketika semua khotib aktif yang sesuai level sudah pernah bertugas di masjid itu.</p>
+    <div class="tbl-wrap"><table><thead><tr><th>Masjid</th><th>Level</th><th>Putaran</th><th>Progres</th><th></th></tr></thead><tbody id="tbProgres"></tbody></table></div>
+  </div>
+</section>
+
 <!-- KHOTIB -->
 <section class="tab" id="tab-khotib">
   <h2>Khotib</h2>
-  <p class="lead">Khotib level 1 boleh bertugas di semua masjid; level 2 di masjid level 2 dan 3; level 3 hanya di masjid level 3. Nonaktifkan khotib yang sedang berhalangan agar tidak masuk rotasi.</p>
+  <p class="lead">Aturan level: khotib ❶ boleh di semua masjid, khotib ❷ di masjid ❷ dan ❸, khotib ❸ hanya di masjid ❸. Khotib yang sedang berhalangan cukup dinonaktifkan agar tidak masuk rotasi; riwayatnya tetap tersimpan.</p>
   <div class="panel">
     <h3 id="khTitle">Tambah khotib</h3>
     <div class="grid">
       <div class="field"><label for="khNama">Nama</label><input id="khNama" placeholder="Ust. ..."></div>
-      <div class="field"><label for="khLevel">Level</label><select id="khLevel"><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select></div>
+      <div class="field"><label for="khLevel">Level</label><select id="khLevel"><option value="1">❶ Level 1</option><option value="2">❷ Level 2</option><option value="3">❸ Level 3</option></select></div>
       <div class="field"><label for="khKontak">No. HP / WA</label><input id="khKontak" inputmode="tel" placeholder="08..."></div>
       <div class="field"><label for="khSpes">Spesialisasi</label><input id="khSpes" placeholder="Fiqih, Aqidah, ..."></div>
       <div class="field"><label for="khAktif">Status</label><select id="khAktif"><option value="true">Aktif</option><option value="false">Tidak aktif</option></select></div>
+      <div class="field"><label for="khCatatan">Catatan</label><input id="khCatatan" placeholder="Opsional"></div>
     </div>
     <div class="row"><button class="btn" id="btnKhSimpan">Tambah khotib</button><button class="btn ghost hidden" id="btnKhBatal">Batal ubah</button></div>
   </div>
-  <div class="panel tbl-wrap"><table><thead><tr><th>Nama</th><th>Level</th><th>Kontak</th><th>Spesialisasi</th><th>Status</th><th>Total khotbah</th><th></th></tr></thead><tbody id="tbKhotib"></tbody></table></div>
+  <div class="panel">
+    <div class="field" style="max-width:320px;margin-bottom:10px"><input id="khCari" placeholder="Cari nama khotib"></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Nama</th><th>Level</th><th>Kontak</th><th>Status</th><th class="num">Bulan ini</th><th class="num">Total</th><th>Catatan</th><th></th></tr></thead><tbody id="tbKhotib"></tbody></table></div>
+  </div>
 </section>
 
 <!-- MASJID -->
 <section class="tab" id="tab-masjid">
   <h2>Masjid</h2>
-  <p class="lead">Masjid level 1 menerima khotib level 1; level 2 menerima level 1–2; level 3 menerima semua level.</p>
+  <p class="lead">Atur pekan berapa saja masjid mendapat khotib dari pesantren. Jika hanya bulan tertentu (misalnya 2 bulan sekali), centang bulannya. Jika tidak ada bulan yang dicentang, artinya setiap bulan.</p>
   <div class="panel">
     <h3 id="msTitle">Tambah masjid</h3>
     <div class="grid">
       <div class="field"><label for="msNama">Nama masjid</label><input id="msNama" placeholder="Masjid ..."></div>
-      <div class="field"><label for="msLevel">Level</label><select id="msLevel"><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select></div>
+      <div class="field"><label for="msLevel">Level</label><select id="msLevel"><option value="1">❶ Level 1</option><option value="2">❷ Level 2</option><option value="3">❸ Level 3</option></select></div>
       <div class="field"><label for="msLokasi">Lokasi</label><input id="msLokasi" placeholder="Desa / kecamatan"></div>
       <div class="field"><label for="msKontak">Kontak pengurus</label><input id="msKontak" inputmode="tel" placeholder="08..."></div>
       <div class="field"><label for="msAktif">Status</label><select id="msAktif"><option value="true">Aktif</option><option value="false">Tidak aktif</option></select></div>
+      <div class="field"><label for="msKet">Keterangan</label><input id="msKet" placeholder="Opsional"></div>
     </div>
+    <div style="margin-top:14px"><span class="flabel">Pekan bertugas</span><div class="chips" id="msPekan"></div></div>
+    <div style="margin-top:14px"><span class="flabel">Hanya bulan tertentu (kosongkan = setiap bulan)</span><div class="chips" id="msBulan"></div></div>
     <div class="row"><button class="btn" id="btnMsSimpan">Tambah masjid</button><button class="btn ghost hidden" id="btnMsBatal">Batal ubah</button></div>
   </div>
-  <div class="panel tbl-wrap"><table><thead><tr><th>Nama</th><th>Level</th><th>Lokasi</th><th>Kontak</th><th>Status</th><th>Khotib sesuai level</th><th></th></tr></thead><tbody id="tbMasjid"></tbody></table></div>
+  <div class="panel">
+    <div class="row" style="margin:0 0 10px">
+      <div class="field" style="min-width:240px"><input id="msCari" placeholder="Cari nama masjid"></div>
+      <div class="field"><select id="msFilterPekan"><option value="">Semua pekan</option><option value="1">Pekan I</option><option value="2">Pekan II</option><option value="3">Pekan III</option><option value="4">Pekan IV</option><option value="5">Pekan V</option></select></div>
+    </div>
+    <div class="tbl-wrap"><table><thead><tr><th>Nama</th><th>Level</th><th>Pekan</th><th>Bulan</th><th>Status</th><th class="num">Khotib sesuai</th><th>Keterangan</th><th></th></tr></thead><tbody id="tbMasjid"></tbody></table></div>
+  </div>
 </section>
 
 <!-- CETAK -->
 <section class="tab" id="tab-cetak">
   <h2>Cetak & unduh</h2>
-  <p class="lead">Pilih satu Jumat atau satu bulan, lalu unduh sebagai gambar (untuk dibagikan di grup WA) atau PDF.</p>
+  <p class="lead">Format bulanan mengikuti lembar jadwal pesantren: masjid per level, kolom per pekan, dan cadangan di bawahnya. Sel gelap berarti masjid itu tidak dijadwalkan pada pekan tersebut.</p>
   <div class="panel">
     <div class="grid">
-      <div class="field"><label for="ctMode">Cakupan</label><select id="ctMode"><option value="tanggal">Satu Jumat</option><option value="bulan">Satu bulan</option></select></div>
-      <div class="field" id="ctTglWrap"><label for="ctTanggal">Tanggal</label><select id="ctTanggal"></select></div>
-      <div class="field hidden" id="ctBlnWrap"><label for="ctBulan">Bulan</label><input type="month" id="ctBulan"></div>
-      <div class="field"><label for="ctKontak">Kolom kontak</label><select id="ctKontak"><option value="ya">Tampilkan</option><option value="tidak">Sembunyikan</option></select></div>
+      <div class="field"><label for="ctMode">Cakupan</label><select id="ctMode"><option value="bulan">Satu bulan</option><option value="tanggal">Satu Jumat</option></select></div>
+      <div class="field" id="ctBlnWrap"><label for="ctBulan">Bulan</label><input type="month" id="ctBulan"></div>
+      <div class="field hidden" id="ctTglWrap"><label for="ctTanggal">Tanggal</label><input type="date" id="ctTanggal"></div>
+      <div class="field"><label for="ctCadangan">Cadangan per pekan</label><select id="ctCadangan"><option value="0">Tidak ditampilkan</option><option value="3">3 orang</option><option value="4" selected>4 orang</option><option value="5">5 orang</option></select></div>
+      <div class="field"><label for="ctNonaktif">Masjid tanpa jadwal</label><select id="ctNonaktif"><option value="sembunyi">Sembunyikan</option><option value="tampil">Tampilkan</option></select></div>
+    </div>
+    <div class="grid" style="margin-top:14px">
+      <div class="field" style="grid-column:1/-1"><label for="ctCatatan">Catatan di bawah jadwal</label><textarea id="ctCatatan" rows="4" placeholder="Misal: Jadwal Khutbah Masjid Polres pekan II bulan Oktober ..."></textarea></div>
+      <div class="field"><label for="ctJabatan">Jabatan penandatangan</label><input id="ctJabatan"></div>
+      <div class="field"><label for="ctNama">Nama penandatangan</label><input id="ctNama"></div>
     </div>
     <div class="row">
       <button class="btn" id="btnPng">Unduh PNG</button>
@@ -284,12 +338,18 @@ tr.off td{color:#8b968f}
       <button class="btn ghost" id="btnPrint">Cetak</button>
     </div>
   </div>
-  <div id="printArea"></div>
+  <div id="printArea" class="landscape"></div>
 </section>
 
 <!-- PENGATURAN -->
 <section class="tab" id="tab-pengaturan">
   <h2>Pengaturan</h2>
+  <div class="panel">
+    <h3>Impor data pesantren</h3>
+    <p class="lead" style="margin-bottom:8px">Mengisi 36 khotib dan 46 masjid beserta level, pekan, dan aturan khusus dari lembar "Jadwal Khutbah Jumat" (April–September 2026), ditambah riwayat Agustus–September dan jadwal tetap Birul Walidain Oktober–Desember. Aman dijalankan berulang: data yang sudah ada diperbarui, bukan digandakan, dan nomor kontak yang sudah diisi tidak ditimpa.</p>
+    <div class="row"><button class="btn" id="btnImpor">Impor data pesantren</button></div>
+    <div id="imporOut"></div>
+  </div>
   <div class="panel">
     <h3>Ganti PIN admin</h3>
     <div class="grid">
@@ -302,7 +362,7 @@ tr.off td{color:#8b968f}
     <h3>Koneksi</h3>
     <p style="word-break:break-all;color:var(--muted);font-size:14px" id="infoUrl"></p>
     <div class="row"><button class="btn ghost" id="btnTes">Tes koneksi</button><button class="btn ghost" id="btnGantiUrl">Ganti alamat API</button></div>
-    <p style="margin-top:14px;font-size:13px;color:var(--muted)">Versi aplikasi 6.0 · Data tersimpan di Google Sheets milik admin.</p>
+    <p style="margin-top:14px;font-size:13px;color:var(--muted)" id="infoVersi"></p>
   </div>
 </section>
 </main>
@@ -312,40 +372,67 @@ tr.off td{color:#8b968f}
 
 <script>
 /* =====================================================================
-   KONFIGURASI
-   Isi API_URL dengan URL /exec dari Apps Script supaya semua perangkat
-   langsung terhubung tanpa perlu menempel URL. Boleh dibiarkan kosong.
+   KONFIGURASI — isi API_URL dengan URL /exec agar semua perangkat
+   langsung terhubung (cukup memasukkan PIN). Boleh dikosongkan.
    ===================================================================== */
 const CONFIG = {
   API_URL: ''
 };
+const VERSI_APP = '6.1';
 
 /* ======================= STATE & UTIL ======================= */
 const S = {
-  url: '', pin: '',
+  url: '', pin: '', versiServer: '',
   data: { khotib: [], masjid: [], jadwal: [] },
   preview: [],
-  edit: { khotib: null, masjid: null, jadwal: null }
+  edit: { khotib: null, masjid: null, jadwal: null },
+  detail: null
 };
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pad = n => String(n).padStart(2, '0');
 const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-const parseYmd = s => { const [y, m, d] = String(s).split('-').map(Number); return new Date(y, m - 1, d); };
+const parseYmd = s => { const [y, m, d] = String(s).split('-').map(Number); return new Date(y, m - 1, d || 1); };
 const isJumat = s => parseYmd(s).getDay() === 5;
+const pekanKe = s => Math.ceil(parseYmd(s).getDate() / 7);
+const LV = ['', '❶', '❷', '❸'];
+const ROM = ['', 'I', 'II', 'III', 'IV', 'V'];
+const BLN = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+const daftar = s => String(s || '').split(/[^0-9]+/).map(Number).filter(Boolean);
 function jumatBerikut(dari = new Date()) {
   const d = new Date(dari.getFullYear(), dari.getMonth(), dari.getDate());
   d.setDate(d.getDate() + ((5 - d.getDay() + 7) % 7));
   return d;
 }
+function jumatDalamBulan(ym) {
+  const [y, m] = ym.split('-').map(Number);
+  const d = new Date(y, m - 1, 1);
+  d.setDate(1 + ((5 - d.getDay() + 7) % 7));
+  const out = [];
+  while (d.getMonth() === m - 1) { out.push(ymd(d)); d.setDate(d.getDate() + 7); }
+  return out;
+}
+function tambahBulan(ym, n) { const d = parseYmd(ym + '-01'); d.setMonth(d.getMonth() + n); return ymd(d).slice(0, 7); }
 const tglPanjang = s => parseYmd(s).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-const blnPanjang = s => parseYmd(s + '-01').toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
-const lv = n => `<span class="lv lv${n}">Level ${n}</span>`;
+const tglPendek = s => parseYmd(s).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+const blnPanjang = ym => parseYmd(ym + '-01').toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+const lv = n => `<span class="lv lv${n}">${LV[n]} Level ${n}</span>`;
 const byId = (list, id) => list.find(x => x.id === id);
 const K = id => byId(S.data.khotib, id);
 const M = id => byId(S.data.masjid, id);
-const bolehDi = (k, m) => k.level <= m.level;          // aturan level
+const bolehDi = (k, m) => k.level <= m.level;
+const sah = j => j.status !== 'BATAL';
 const sortNama = (a, b) => a.nama.localeCompare(b.nama, 'id');
+const sortLvNama = (a, b) => a.level - b.level || sortNama(a, b);
+
+/** Apakah masjid dijadwalkan menerima khotib pada Jumat t (berdasarkan pekan & bulan)? */
+function masjidTerjadwal(m, t) {
+  if (!m.aktif) return false;
+  const p = daftar(m.pekan), b = daftar(m.bulan);
+  return (!p.length || p.includes(pekanKe(t))) && (!b.length || b.includes(parseYmd(t).getMonth() + 1));
+}
+const teksPekan = m => { const p = daftar(m.pekan); return p.length ? p.map(x => ROM[x]).join(', ') : 'Setiap Jumat'; };
+const teksBulan = m => { const b = daftar(m.bulan); return b.length ? b.map(x => BLN[x]).join(', ') : 'Setiap bulan'; };
 
 function toast(msg, jenis = '') {
   const el = document.createElement('div');
@@ -359,7 +446,7 @@ let syncCount = 0;
 function setSync(on) {
   syncCount += on ? 1 : -1;
   $('#sync').textContent = syncCount > 0 ? 'Menyimpan…' : 'Tersinkron';
-  document.querySelectorAll('.btn').forEach(b => { if (b.dataset.busy !== 'no') b.disabled = syncCount > 0; });
+  document.querySelectorAll('.btn').forEach(b => b.disabled = syncCount > 0);
 }
 
 /* ======================= API ======================= */
@@ -371,24 +458,19 @@ async function api(action, payload = {}) {
     try {
       res = await fetch(S.url, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },   // hindari preflight CORS
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action, pin: S.pin, ...payload })
       });
-    } catch (e) {
-      throw new Error('Tidak bisa menghubungi server. Periksa internet dan alamat API.');
-    }
+    } catch (e) { throw new Error('Tidak bisa menghubungi server. Periksa internet dan alamat API.'); }
     const txt = await res.text();
     let j;
     try { j = JSON.parse(txt); }
-    catch (e) {
-      throw new Error('Server tidak mengembalikan data. Pastikan deploy sebagai "Aplikasi web", akses "Siapa saja", dan URL berakhiran /exec.');
-    }
+    catch (e) { throw new Error('Server tidak mengembalikan data. Pastikan deploy sebagai "Aplikasi web", akses "Siapa saja", dan URL berakhiran /exec.'); }
     if (!j.ok) throw new Error(j.message || 'Terjadi kesalahan di server.');
+    if (j.versi) S.versiServer = j.versi;
     if (j.data) { S.data = j.data; renderAll(); }
     return j;
-  } finally {
-    setSync(false);
-  }
+  } finally { setSync(false); }
 }
 
 /* ======================= LOGIN ======================= */
@@ -407,6 +489,13 @@ function tampilApp() {
   $('#login').classList.add('hidden');
   $('#app').classList.remove('hidden');
   $('#infoUrl').textContent = S.url;
+  cekVersi();
+}
+
+function cekVersi() {
+  const v = S.versiServer || '6.0';
+  $('#infoVersi').textContent = `Aplikasi v${VERSI_APP} · Server v${v}`;
+  if (v !== VERSI_APP) toast(`Kode.gs di server masih v${v}. Tempel Kode.gs v${VERSI_APP}, lalu Deploy → Kelola deployment → Versi baru.`, 'bad');
 }
 
 async function login() {
@@ -434,22 +523,20 @@ async function login() {
 }
 
 function logout() {
-  localStorage.removeItem('jk_pin');
-  sessionStorage.removeItem('jk_pin');
-  S.pin = '';
-  S.data = { khotib: [], masjid: [], jadwal: [] };
+  localStorage.removeItem('jk_pin'); sessionStorage.removeItem('jk_pin');
+  S.pin = ''; S.data = { khotib: [], masjid: [], jadwal: [] };
   tampilLogin();
 }
 
-/* ======================= TAB ======================= */
 function bukaTab(nama) {
   document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === nama));
   document.querySelectorAll('section.tab').forEach(s => s.classList.toggle('on', s.id === 'tab-' + nama));
   if (nama === 'cetak') renderCetak();
+  if (nama === 'rekap') renderRekap();
   window.scrollTo({ top: 0 });
 }
 
-/* ======================= RENDER ======================= */
+/* ======================= RENDER UMUM ======================= */
 function renderAll() {
   renderRingkasan();
   renderKhotib();
@@ -457,73 +544,71 @@ function renderAll() {
   isiPilihanJadwal();
   renderJadwal();
   if (S.preview.length) renderPreview();
+  if ($('#tab-rekap').classList.contains('on')) renderRekap();
   if ($('#tab-cetak').classList.contains('on')) renderCetak();
 }
 
-function hitungPutaran() {
-  const kh = S.data.khotib.filter(k => k.aktif);
-  return S.data.masjid.filter(m => m.aktif).sort((a, b) => a.level - b.level || sortNama(a, b)).map(m => {
-    const elig = kh.filter(k => bolehDi(k, m));
-    const cnt = {};
-    S.data.jadwal.forEach(j => { if (j.masjidId === m.id) cnt[j.khotibId] = (cnt[j.khotibId] || 0) + 1; });
-    const c = elig.map(k => cnt[k.id] || 0);
-    const min = c.length ? Math.min(...c) : 0;
-    return { m, total: elig.length, putaran: min + 1, sudah: c.filter(x => x > min).length };
-  });
+function hitung(filter = () => true) {
+  const c = {};
+  S.data.jadwal.filter(j => sah(j) && filter(j)).forEach(j => c[j.khotibId] = (c[j.khotibId] || 0) + 1);
+  return c;
 }
 
+/* ---------- Ringkasan ---------- */
 function renderRingkasan() {
+  $('#kosongDb').innerHTML = !S.data.khotib.length && !S.data.masjid.length
+    ? `<div class="note warn" style="margin:0 0 18px">Database masih kosong. Buka <b>Pengaturan → Impor data pesantren</b> untuk mengisi data khotib dan masjid secara otomatis.
+       <div class="row"><button class="btn" onclick="bukaTab('pengaturan')">Buka Pengaturan</button></div></div>` : '';
+
   const t = ymd(jumatBerikut());
   const hari = S.data.jadwal.filter(j => j.tanggal === t);
-  const aktifM = S.data.masjid.filter(m => m.aktif);
-  let h = `<div style="color:var(--muted);font-size:14px">Jumat terdekat</div><div class="date">${tglPanjang(t)}</div>`;
-  if (!hari.length) {
-    h += `<p style="margin-bottom:12px">Belum ada jadwal untuk Jumat ini.</p>
-          <button class="btn" onclick="bukaTab('rotasi')">Buat jadwal dengan rotasi otomatis</button>`;
+  const target = S.data.masjid.filter(m => masjidTerjadwal(m, t) || hari.some(j => j.masjidId === m.id)).sort(sortLvNama);
+  let h = `<div style="color:var(--muted);font-size:14px">Jumat terdekat · Pekan ${ROM[pekanKe(t)]}</div><div class="date">${tglPanjang(t)}</div>`;
+  if (!target.length) {
+    h += `<p style="margin-top:10px">Tidak ada masjid yang dijadwalkan pada pekan ini.</p>`;
   } else {
-    h += `<div class="tbl-wrap"><table><thead><tr><th>Masjid</th><th>Khotib</th><th>Kontak khotib</th></tr></thead><tbody>` +
-      hari.map(j => ({ j, m: M(j.masjidId), k: K(j.khotibId) }))
-        .sort((a, b) => (a.m?.nama || '').localeCompare(b.m?.nama || ''))
-        .map(({ m, k }) => `<tr><td>${esc(m?.nama || '(masjid terhapus)')}</td><td>${esc(k?.nama || '(khotib terhapus)')}</td><td>${esc(k?.kontak || '')}</td></tr>`).join('') +
-      `</tbody></table></div>`;
-    const kosong = aktifM.filter(m => !hari.some(j => j.masjidId === m.id));
-    if (kosong.length) h += `<div class="note warn">${kosong.length} masjid belum punya khotib: ${kosong.map(m => esc(m.nama)).join(', ')}.</div>`;
+    const belum = target.filter(m => !hari.some(j => j.masjidId === m.id && sah(j)));
+    h += `<p style="margin:6px 0 12px;color:var(--muted)">${target.length - belum.length} dari ${target.length} masjid sudah punya khotib.</p>`;
+    h += `<div class="tbl-wrap"><table><thead><tr><th>Masjid</th><th>Level</th><th>Khotib</th><th>Kontak khotib</th></tr></thead><tbody>` +
+      target.map(m => {
+        const js = hari.filter(j => j.masjidId === m.id);
+        if (!js.length) return `<tr><td>${esc(m.nama)}</td><td>${lv(m.level)}</td><td><span class="tag warn">Belum diisi</span></td><td></td></tr>`;
+        return js.map(j => { const k = K(j.khotibId);
+          return `<tr><td>${esc(m.nama)}</td><td>${lv(m.level)}</td><td>${esc(k?.nama || '(khotib terhapus)')} ${j.status === 'BATAL' ? '<span class="tag bad">Batal</span>' : ''}</td><td>${esc(k?.kontak || '')}</td></tr>`; }).join('');
+      }).join('') + `</tbody></table></div>`;
+    if (belum.length) h += `<div class="row"><button class="btn" onclick="bukaTab('rotasi')">Isi dengan rotasi otomatis</button></div>`;
   }
   $('#nextBox').innerHTML = h;
 
-  const kA = S.data.khotib.filter(k => k.aktif).length;
+  const ym = t.slice(0, 7);
+  const slot = jumatDalamBulan(ym).reduce((n, tg) => n + S.data.masjid.filter(m => masjidTerjadwal(m, tg)).length, 0);
+  const isi = S.data.jadwal.filter(j => j.tanggal.startsWith(ym) && sah(j)).length;
+  const kA = S.data.khotib.filter(k => k.aktif).length, mA = S.data.masjid.filter(m => m.aktif).length;
   $('#counts').innerHTML = `
-    <div><b>${kA}</b>khotib aktif${S.data.khotib.length > kA ? ` (dari ${S.data.khotib.length})` : ''}</div>
-    <div><b>${aktifM.length}</b>masjid aktif</div>
-    <div><b>${S.data.jadwal.length}</b>jadwal tersimpan</div>`;
-
-  const pr = hitungPutaran();
-  $('#tbProgres').innerHTML = pr.length ? pr.map(p => {
-    const pct = p.total ? Math.round(p.sudah / p.total * 100) : 0;
-    return `<tr><td>${esc(p.m.nama)}</td><td>${lv(p.m.level)}</td><td>Ke-${p.putaran}</td>
-      <td><div class="bar"><i style="width:${pct}%"></i></div></td>
-      <td>${p.total ? `${p.sudah} dari ${p.total} khotib` : '<span class="tag bad">Tidak ada khotib sesuai level</span>'}</td></tr>`;
-  }).join('') : `<tr><td colspan="5" class="empty">Tambahkan masjid dan khotib terlebih dahulu.</td></tr>`;
+    <div><b>${kA}</b>khotib aktif</div>
+    <div><b>${mA}</b>masjid aktif</div>
+    <div><b>${isi} / ${slot}</b>slot ${blnPanjang(ym)} terisi</div>`;
 }
 
 /* ---------- Khotib ---------- */
 function renderKhotib() {
-  const cnt = {};
-  S.data.jadwal.forEach(j => cnt[j.khotibId] = (cnt[j.khotibId] || 0) + 1);
-  const list = [...S.data.khotib].sort((a, b) => (b.aktif - a.aktif) || a.level - b.level || sortNama(a, b));
+  const bln = ymd(jumatBerikut()).slice(0, 7);
+  const tot = hitung(), bi = hitung(j => j.tanggal.startsWith(bln));
+  const q = $('#khCari').value.trim().toLowerCase();
+  const list = S.data.khotib.filter(k => !q || k.nama.toLowerCase().includes(q)).sort((a, b) => (b.aktif - a.aktif) || sortLvNama(a, b));
   $('#tbKhotib').innerHTML = list.length ? list.map(k => `
     <tr class="${k.aktif ? '' : 'off'}">
-      <td><b>${esc(k.nama)}</b></td><td>${lv(k.level)}</td><td>${esc(k.kontak)}</td><td>${esc(k.spesialisasi)}</td>
+      <td><b>${esc(k.nama)}</b></td><td>${lv(k.level)}</td><td>${esc(k.kontak)}</td>
       <td>${k.aktif ? '<span class="tag">Aktif</span>' : '<span class="tag warn">Tidak aktif</span>'}</td>
-      <td>${cnt[k.id] || 0}</td>
+      <td class="num">${bi[k.id] || 0}</td><td class="num">${tot[k.id] || 0}</td><td style="font-size:13px;color:var(--muted)">${esc(k.catatan)}</td>
       <td class="act"><button class="btn sm ghost" onclick="ubahKhotib('${k.id}')">Ubah</button>
         <button class="btn sm danger" onclick="hapus('khotib','${k.id}')">Hapus</button></td>
-    </tr>`).join('') : `<tr><td colspan="7" class="empty">Belum ada khotib. Isi formulir di atas untuk menambahkan.</td></tr>`;
+    </tr>`).join('') : `<tr><td colspan="8" class="empty">${q ? 'Tidak ada yang cocok.' : 'Belum ada khotib. Gunakan Pengaturan → Impor data pesantren, atau isi formulir di atas.'}</td></tr>`;
 }
 
 function resetFormKhotib() {
   S.edit.khotib = null;
-  ['#khNama', '#khKontak', '#khSpes'].forEach(s => $(s).value = '');
+  ['#khNama', '#khKontak', '#khSpes', '#khCatatan'].forEach(s => $(s).value = '');
   $('#khLevel').value = '1'; $('#khAktif').value = 'true';
   $('#khTitle').textContent = 'Tambah khotib';
   $('#btnKhSimpan').textContent = 'Tambah khotib';
@@ -534,19 +619,17 @@ function ubahKhotib(id) {
   const k = K(id); if (!k) return;
   S.edit.khotib = id;
   $('#khNama').value = k.nama; $('#khLevel').value = k.level; $('#khKontak').value = k.kontak;
-  $('#khSpes').value = k.spesialisasi; $('#khAktif').value = String(k.aktif);
+  $('#khSpes').value = k.spesialisasi; $('#khAktif').value = String(k.aktif); $('#khCatatan').value = k.catatan || '';
   $('#khTitle').textContent = 'Ubah data ' + k.nama;
   $('#btnKhSimpan').textContent = 'Simpan perubahan';
   $('#btnKhBatal').classList.remove('hidden');
   $('#tab-khotib').scrollIntoView({ behavior: 'smooth' });
-  $('#khNama').focus();
 }
 
 async function simpanKhotib() {
   const data = {
-    nama: $('#khNama').value.trim(), level: Number($('#khLevel').value),
-    kontak: $('#khKontak').value.trim(), spesialisasi: $('#khSpes').value.trim(),
-    aktif: $('#khAktif').value === 'true'
+    nama: $('#khNama').value.trim(), level: Number($('#khLevel').value), kontak: $('#khKontak').value.trim(),
+    spesialisasi: $('#khSpes').value.trim(), aktif: $('#khAktif').value === 'true', catatan: $('#khCatatan').value.trim()
   };
   if (!data.nama) return toast('Nama khotib wajib diisi.', 'bad');
   try {
@@ -557,24 +640,37 @@ async function simpanKhotib() {
 }
 
 /* ---------- Masjid ---------- */
+function buatChips() {
+  $('#msPekan').innerHTML = [1, 2, 3, 4, 5].map(n => `<label><input type="checkbox" value="${n}"> Pekan ${ROM[n]}</label>`).join('');
+  $('#msBulan').innerHTML = BLN.slice(1).map((b, i) => `<label><input type="checkbox" value="${i + 1}"> ${b}</label>`).join('');
+}
+const ambilChips = sel => [...document.querySelectorAll(sel + ' input:checked')].map(i => i.value).join(',');
+const setChips = (sel, s) => { const d = daftar(s); document.querySelectorAll(sel + ' input').forEach(i => i.checked = d.includes(Number(i.value))); };
+
 function renderMasjid() {
   const kh = S.data.khotib.filter(k => k.aktif);
-  const list = [...S.data.masjid].sort((a, b) => (b.aktif - a.aktif) || a.level - b.level || sortNama(a, b));
+  const q = $('#msCari').value.trim().toLowerCase();
+  const fp = Number($('#msFilterPekan').value);
+  const list = S.data.masjid
+    .filter(m => (!q || m.nama.toLowerCase().includes(q)) && (!fp || !daftar(m.pekan).length || daftar(m.pekan).includes(fp)))
+    .sort((a, b) => (b.aktif - a.aktif) || sortLvNama(a, b));
   $('#tbMasjid').innerHTML = list.length ? list.map(m => {
     const n = kh.filter(k => bolehDi(k, m)).length;
     return `<tr class="${m.aktif ? '' : 'off'}">
-      <td><b>${esc(m.nama)}</b></td><td>${lv(m.level)}</td><td>${esc(m.lokasi)}</td><td>${esc(m.kontak)}</td>
+      <td><b>${esc(m.nama)}</b>${m.lokasi ? `<div style="font-size:12.5px;color:var(--muted)">${esc(m.lokasi)}</div>` : ''}</td><td>${lv(m.level)}</td>
+      <td>${teksPekan(m)}</td><td>${daftar(m.bulan).length ? `<span class="tag warn">${teksBulan(m)}</span>` : 'Setiap bulan'}</td>
       <td>${m.aktif ? '<span class="tag">Aktif</span>' : '<span class="tag warn">Tidak aktif</span>'}</td>
-      <td>${n ? n + ' orang' : '<span class="tag bad">0 orang</span>'}</td>
+      <td class="num">${n || '<span class="tag bad">0</span>'}</td><td style="font-size:13px;color:var(--muted)">${esc(m.keterangan)}</td>
       <td class="act"><button class="btn sm ghost" onclick="ubahMasjid('${m.id}')">Ubah</button>
         <button class="btn sm danger" onclick="hapus('masjid','${m.id}')">Hapus</button></td></tr>`;
-  }).join('') : `<tr><td colspan="7" class="empty">Belum ada masjid. Isi formulir di atas untuk menambahkan.</td></tr>`;
+  }).join('') : `<tr><td colspan="8" class="empty">${q || fp ? 'Tidak ada yang cocok.' : 'Belum ada masjid. Gunakan Pengaturan → Impor data pesantren, atau isi formulir di atas.'}</td></tr>`;
 }
 
 function resetFormMasjid() {
   S.edit.masjid = null;
-  ['#msNama', '#msLokasi', '#msKontak'].forEach(s => $(s).value = '');
+  ['#msNama', '#msLokasi', '#msKontak', '#msKet'].forEach(s => $(s).value = '');
   $('#msLevel').value = '1'; $('#msAktif').value = 'true';
+  setChips('#msPekan', '1'); setChips('#msBulan', '');
   $('#msTitle').textContent = 'Tambah masjid';
   $('#btnMsSimpan').textContent = 'Tambah masjid';
   $('#btnMsBatal').classList.add('hidden');
@@ -584,21 +680,22 @@ function ubahMasjid(id) {
   const m = M(id); if (!m) return;
   S.edit.masjid = id;
   $('#msNama').value = m.nama; $('#msLevel').value = m.level; $('#msLokasi').value = m.lokasi;
-  $('#msKontak').value = m.kontak; $('#msAktif').value = String(m.aktif);
+  $('#msKontak').value = m.kontak; $('#msAktif').value = String(m.aktif); $('#msKet').value = m.keterangan || '';
+  setChips('#msPekan', m.pekan); setChips('#msBulan', m.bulan);
   $('#msTitle').textContent = 'Ubah data ' + m.nama;
   $('#btnMsSimpan').textContent = 'Simpan perubahan';
   $('#btnMsBatal').classList.remove('hidden');
   $('#tab-masjid').scrollIntoView({ behavior: 'smooth' });
-  $('#msNama').focus();
 }
 
 async function simpanMasjid() {
   const data = {
-    nama: $('#msNama').value.trim(), level: Number($('#msLevel').value),
-    lokasi: $('#msLokasi').value.trim(), kontak: $('#msKontak').value.trim(),
-    aktif: $('#msAktif').value === 'true'
+    nama: $('#msNama').value.trim(), level: Number($('#msLevel').value), lokasi: $('#msLokasi').value.trim(),
+    kontak: $('#msKontak').value.trim(), aktif: $('#msAktif').value === 'true', keterangan: $('#msKet').value.trim(),
+    pekan: ambilChips('#msPekan'), bulan: ambilChips('#msBulan')
   };
   if (!data.nama) return toast('Nama masjid wajib diisi.', 'bad');
+  if (!data.pekan && !confirm('Tidak ada pekan yang dicentang. Artinya masjid ini mendapat khotib SETIAP Jumat. Lanjutkan?')) return;
   try {
     if (S.edit.masjid) { await api('update', { sheet: 'masjid', id: S.edit.masjid, data }); toast('Data masjid disimpan.', 'ok'); }
     else { await api('create', { sheet: 'masjid', data }); toast(data.nama + ' ditambahkan.', 'ok'); }
@@ -606,7 +703,7 @@ async function simpanMasjid() {
   } catch (e) { toast(e.message, 'bad'); }
 }
 
-/* ---------- Hapus (khotib / masjid / jadwal) ---------- */
+/* ---------- Hapus ---------- */
 async function hapus(sheet, id) {
   const item = byId(S.data[sheet], id);
   const label = sheet === 'jadwal' ? 'jadwal ini' : (item ? item.nama : 'data ini');
@@ -617,22 +714,26 @@ async function hapus(sheet, id) {
   } catch (e) {
     const m = /^TERKAIT:(\d+)/.exec(e.message);
     if (!m) return toast(e.message, 'bad');
-    const ok = confirm(`${label} tercatat di ${m[1]} jadwal.\n\nSaran: ubah statusnya menjadi "Tidak aktif" agar riwayat tetap utuh.\n\nTetap hapus beserta ${m[1]} jadwalnya?`);
-    if (!ok) return;
-    try {
-      const r = await api('delete', { sheet, id, force: true });
-      toast(`Dihapus bersama ${r.hasil.jadwalTerhapus} jadwal.`, 'ok');
-    } catch (e2) { toast(e2.message, 'bad'); }
+    if (!confirm(`${label} tercatat di ${m[1]} jadwal.\n\nSaran: ubah statusnya menjadi "Tidak aktif" agar riwayat tetap utuh.\n\nTetap hapus beserta ${m[1]} jadwalnya?`)) return;
+    try { const r = await api('delete', { sheet, id, force: true }); toast(`Dihapus bersama ${r.hasil.jadwalTerhapus} jadwal.`, 'ok'); }
+    catch (e2) { toast(e2.message, 'bad'); }
   }
 }
 
 /* ---------- Jadwal manual ---------- */
 function isiPilihanJadwal() {
-  const mSel = $('#jdMasjid'), kSel = $('#jdKhotib');
-  const mv = mSel.value, kv = kSel.value;
-  mSel.innerHTML = '<option value="">Pilih masjid</option>' +
-    [...S.data.masjid].sort((a, b) => (b.aktif - a.aktif) || sortNama(a, b))
-      .map(m => `<option value="${m.id}">${esc(m.nama)} · L${m.level}${m.aktif ? '' : ' (tidak aktif)'}</option>`).join('');
+  const mSel = $('#jdMasjid'), mv = mSel.value, kv = $('#jdKhotib').value;
+  const t = $('#jdTanggal').value;
+  const list = [...S.data.masjid].sort((a, b) => {
+    const ta = t ? masjidTerjadwal(a, t) : true, tb = t ? masjidTerjadwal(b, t) : true;
+    return (tb - ta) || (b.aktif - a.aktif) || sortLvNama(a, b);
+  });
+  mSel.innerHTML = '<option value="">Pilih masjid</option>' + list.map(m => {
+    const cat = [];
+    if (t && m.aktif && !masjidTerjadwal(m, t)) cat.push('bukan pekannya');
+    if (!m.aktif) cat.push('tidak aktif');
+    return `<option value="${m.id}">${LV[m.level]} ${esc(m.nama)}${cat.length ? ' — ' + cat.join(', ') : ''}</option>`;
+  }).join('');
   mSel.value = mv;
   isiPilihanKhotib(kv);
 }
@@ -640,17 +741,18 @@ function isiPilihanJadwal() {
 function isiPilihanKhotib(pilih) {
   const m = M($('#jdMasjid').value);
   const t = $('#jdTanggal').value;
-  const sibuk = new Set(S.data.jadwal.filter(j => j.tanggal === t && j.id !== S.edit.jadwal).map(j => j.khotibId));
+  const sibuk = new Set(S.data.jadwal.filter(j => j.tanggal === t && sah(j) && j.id !== S.edit.jadwal).map(j => j.khotibId));
+  const bln = t ? hitung(j => j.tanggal.startsWith(t.slice(0, 7))) : {};
   const list = [...S.data.khotib].sort((a, b) => {
     const ea = m ? bolehDi(a, m) : true, eb = m ? bolehDi(b, m) : true;
-    return (eb - ea) || (b.aktif - a.aktif) || sortNama(a, b);
+    return (eb - ea) || (sibuk.has(a.id) - sibuk.has(b.id)) || (b.aktif - a.aktif) || sortLvNama(a, b);
   });
   $('#jdKhotib').innerHTML = '<option value="">Pilih khotib</option>' + list.map(k => {
     const cat = [];
     if (m && !bolehDi(k, m)) cat.push('level tidak sesuai');
     if (sibuk.has(k.id)) cat.push('sudah bertugas');
     if (!k.aktif) cat.push('tidak aktif');
-    return `<option value="${k.id}">${esc(k.nama)} · L${k.level}${cat.length ? ' — ' + cat.join(', ') : ''}</option>`;
+    return `<option value="${k.id}">${LV[k.level]} ${esc(k.nama)} (${bln[k.id] || 0}× bln ini)${cat.length ? ' — ' + cat.join(', ') : ''}</option>`;
   }).join('');
   if (pilih !== undefined) $('#jdKhotib').value = pilih;
   petunjukJadwal();
@@ -658,21 +760,23 @@ function isiPilihanKhotib(pilih) {
 
 function petunjukJadwal() {
   const t = $('#jdTanggal').value, m = M($('#jdMasjid').value), k = K($('#jdKhotib').value);
+  const batal = $('#jdStatus').value === 'BATAL';
   const n = [];
   if (t && !isJumat(t)) n.push(['warn', `${tglPanjang(t)} bukan hari Jumat.`]);
-  if (t && m) {
-    const ada = S.data.jadwal.find(j => j.tanggal === t && j.masjidId === m.id && j.id !== S.edit.jadwal);
+  if (t && m && !masjidTerjadwal(m, t)) n.push(['warn', `${m.nama} biasanya mendapat khotib pada pekan ${teksPekan(m)}${daftar(m.bulan).length ? ' (bulan ' + teksBulan(m) + ')' : ''}; tanggal ini pekan ${ROM[pekanKe(t)]}.`]);
+  if (!batal && t && m) {
+    const ada = S.data.jadwal.find(j => j.tanggal === t && j.masjidId === m.id && sah(j) && j.id !== S.edit.jadwal);
     if (ada) n.push(['bad', `${m.nama} sudah diisi ${K(ada.khotibId)?.nama || 'khotib lain'} pada tanggal ini.`]);
   }
-  if (t && k) {
-    const ada = S.data.jadwal.find(j => j.tanggal === t && j.khotibId === k.id && j.id !== S.edit.jadwal);
+  if (!batal && t && k) {
+    const ada = S.data.jadwal.find(j => j.tanggal === t && j.khotibId === k.id && sah(j) && j.id !== S.edit.jadwal);
     if (ada) n.push(['bad', `${k.nama} sudah bertugas di ${M(ada.masjidId)?.nama || 'masjid lain'} pada tanggal ini.`]);
   }
   if (m && k) {
-    if (!bolehDi(k, m)) n.push(['warn', `${k.nama} (Level ${k.level}) di atas level ${m.nama} (Level ${m.level}). Tetap bisa disimpan sebagai pengecualian.`]);
+    if (!bolehDi(k, m)) n.push(['warn', `${k.nama} (${LV[k.level]}) tidak sesuai level ${m.nama} (${LV[m.level]}). Tetap bisa disimpan sebagai pengecualian.`]);
     else {
-      const x = S.data.jadwal.filter(j => j.masjidId === m.id && j.khotibId === k.id && j.id !== S.edit.jadwal).length;
-      n.push(['ok', x ? `${k.nama} sudah ${x} kali berkhotbah di ${m.nama}.` : `${k.nama} belum pernah berkhotbah di ${m.nama}.`]);
+      const riw = S.data.jadwal.filter(j => j.masjidId === m.id && j.khotibId === k.id && sah(j) && j.id !== S.edit.jadwal).map(j => j.tanggal).sort();
+      n.push(['ok', riw.length ? `${k.nama} sudah ${riw.length}× di ${m.nama}, terakhir ${tglPanjang(riw[riw.length - 1])}.` : `${k.nama} belum pernah berkhotbah di ${m.nama}.`]);
     }
   }
   $('#jdHint').innerHTML = n.map(([c, s]) => `<div class="note ${c}">${esc(s)}</div>`).join('');
@@ -680,9 +784,8 @@ function petunjukJadwal() {
 
 function resetFormJadwal() {
   S.edit.jadwal = null;
-  $('#jdCatatan').value = '';
-  $('#jdMasjid').value = '';
-  isiPilihanKhotib('');
+  $('#jdCatatan').value = ''; $('#jdMasjid').value = ''; $('#jdStatus').value = '';
+  isiPilihanJadwal(); isiPilihanKhotib('');
   $('#jdTitle').textContent = 'Tambah jadwal';
   $('#btnJdSimpan').textContent = 'Simpan jadwal';
   $('#btnJdBatal').classList.add('hidden');
@@ -692,26 +795,27 @@ function ubahJadwal(id) {
   const j = byId(S.data.jadwal, id); if (!j) return;
   S.edit.jadwal = id;
   $('#jdTanggal').value = j.tanggal;
+  isiPilihanJadwal();
   $('#jdMasjid').value = j.masjidId;
-  $('#jdCatatan').value = j.catatan;
+  $('#jdCatatan').value = j.catatan; $('#jdStatus').value = j.status || '';
   isiPilihanKhotib(j.khotibId);
   $('#jdTitle').textContent = 'Ubah jadwal';
   $('#btnJdSimpan').textContent = 'Simpan perubahan';
   $('#btnJdBatal').classList.remove('hidden');
-  $('#tab-jadwal').scrollIntoView({ behavior: 'smooth' });
+  bukaTab('jadwal');
 }
 
 async function simpanJadwal() {
   const tanggal = $('#jdTanggal').value, masjidId = $('#jdMasjid').value, khotibId = $('#jdKhotib').value;
   if (!tanggal || !masjidId || !khotibId) return toast('Tanggal, masjid, dan khotib wajib diisi.', 'bad');
-  const m = M(masjidId), k = K(khotibId);
+  const m = M(masjidId), k = K(khotibId), status = $('#jdStatus').value;
   if (!isJumat(tanggal) && !confirm(`${tglPanjang(tanggal)} bukan hari Jumat. Tetap simpan?`)) return;
   let override = false;
-  if (!bolehDi(k, m)) {
-    if (!confirm(`${k.nama} (Level ${k.level}) melebihi level ${m.nama} (Level ${m.level}).\n\nSimpan sebagai pengecualian?`)) return;
+  if (!bolehDi(k, m) && status !== 'BATAL') {
+    if (!confirm(`${k.nama} (Level ${k.level}) tidak sesuai level ${m.nama} (Level ${m.level}).\n\nSimpan sebagai pengecualian?`)) return;
     override = true;
   }
-  const data = { tanggal, masjidId, khotibId, catatan: $('#jdCatatan').value.trim(), override };
+  const data = { tanggal, masjidId, khotibId, status, catatan: $('#jdCatatan').value.trim(), override };
   try {
     if (S.edit.jadwal) { await api('update', { sheet: 'jadwal', id: S.edit.jadwal, data }); toast('Jadwal diubah.', 'ok'); }
     else { await api('create', { sheet: 'jadwal', data }); toast('Jadwal disimpan.', 'ok'); }
@@ -728,32 +832,36 @@ function renderJadwal() {
   }
   const grup = {};
   list.forEach(j => (grup[j.tanggal] = grup[j.tanggal] || []).push(j));
-  $('#jdList').innerHTML = Object.keys(grup).sort().map(t => `
-    <div class="group-h"><b>${tglPanjang(t)}</b>
+  $('#jdList').innerHTML = Object.keys(grup).sort().map(t => {
+    const target = S.data.masjid.filter(m => masjidTerjadwal(m, t));
+    const kosong = target.filter(m => !grup[t].some(j => j.masjidId === m.id && sah(j)));
+    return `
+    <div class="group-h"><b>${tglPanjang(t)} · Pekan ${ROM[pekanKe(t)]}</b>
       <button class="btn sm danger" onclick="hapusTanggal('${t}')">Hapus semua jadwal tanggal ini</button></div>
+    ${kosong.length ? `<div class="note warn" style="margin:8px 0">Belum terisi: ${kosong.map(m => esc(m.nama)).join(', ')}</div>` : ''}
     <div class="tbl-wrap"><table><tbody>${grup[t].map(j => ({ j, m: M(j.masjidId), k: K(j.khotibId) }))
-      .sort((a, b) => (a.m?.nama || '').localeCompare(b.m?.nama || ''))
+      .sort((a, b) => (a.m?.level || 9) - (b.m?.level || 9) || (a.m?.nama || '').localeCompare(b.m?.nama || ''))
       .map(({ j, m, k }) => `<tr>
-        <td style="width:34%">${esc(m?.nama || '(masjid terhapus)')} ${m ? lv(m.level) : ''}</td>
-        <td style="width:30%">${esc(k?.nama || '(khotib terhapus)')} ${k ? lv(k.level) : ''}
-          ${j.override ? '<span class="tag warn">pengecualian</span>' : ''}</td>
-        <td>${esc(j.catatan)}</td>
+        <td style="width:36%">${m ? LV[m.level] : ''} ${esc(m?.nama || '(masjid terhapus)')}</td>
+        <td style="width:34%">${k ? LV[k.level] : ''} ${esc(k?.nama || '(khotib terhapus)')}
+          ${j.status === 'BATAL' ? '<span class="tag bad">Batal</span>' : ''}
+          ${j.override ? '<span class="tag warn">pengecualian level</span>' : ''}</td>
+        <td style="font-size:13px;color:var(--muted)">${esc(j.catatan)}</td>
         <td class="act"><button class="btn sm ghost" onclick="ubahJadwal('${j.id}')">Ubah</button>
           <button class="btn sm danger" onclick="hapus('jadwal','${j.id}')">Hapus</button></td></tr>`).join('')}
-    </tbody></table></div>`).join('');
+    </tbody></table></div>`;
+  }).join('');
 }
 
 async function hapusTanggal(t) {
   const n = S.data.jadwal.filter(j => j.tanggal === t).length;
   if (!confirm(`Hapus ${n} jadwal pada ${tglPanjang(t)}?`)) return;
-  try {
-    const r = await api('deleteJadwalTanggal', { tanggal: t });
-    toast(`${r.hasil.terhapus} jadwal dihapus.`, 'ok');
-  } catch (e) { toast(e.message, 'bad'); }
+  try { const r = await api('deleteJadwalTanggal', { tanggal: t }); toast(`${r.hasil.terhapus} jadwal dihapus.`, 'ok'); }
+  catch (e) { toast(e.message, 'bad'); }
 }
 
 /* ---------- Rotasi otomatis ---------- */
-// Penugasan optimal (metode Hungaria): baris = masjid, kolom = khotib, n <= m.
+// Penugasan optimal (metode Hungaria). Baris = masjid, kolom = khotib (n <= m).
 function hungaria(biaya) {
   const n = biaya.length, m = biaya[0].length;
   const u = Array(n + 1).fill(0), v = Array(m + 1).fill(0), p = Array(m + 1).fill(0), way = Array(m + 1).fill(0);
@@ -771,9 +879,7 @@ function hungaria(biaya) {
         if (cur < minv[j]) { minv[j] = cur; way[j] = j0; }
         if (minv[j] < delta) { delta = minv[j]; j1 = j; }
       }
-      for (let j = 0; j <= m; j++) {
-        if (used[j]) { u[p[j]] += delta; v[j] -= delta; } else minv[j] -= delta;
-      }
+      for (let j = 0; j <= m; j++) { if (used[j]) { u[p[j]] += delta; v[j] -= delta; } else minv[j] -= delta; }
       j0 = j1;
     } while (p[j0] !== 0);
     do { const j1 = way[j0]; p[j0] = p[j1]; j0 = j1; } while (j0);
@@ -783,62 +889,68 @@ function hungaria(biaya) {
   return hasil;
 }
 
-function buatRotasi(mulai, minggu) {
+function buatRotasi(tanggalList, opsi = {}) {
+  const gapW = opsi.prioritas === 'campur' ? 0 : 2e7;
+  const batas = Number(opsi.batas) || 0;
   const kh = S.data.khotib.filter(k => k.aktif).sort(sortNama);
-  const ms = S.data.masjid.filter(m => m.aktif).sort((a, b) => a.level - b.level || sortNama(a, b));
-  const pasangan = {}, total = {}, terakhir = {};
+  const ms = S.data.masjid.filter(m => m.aktif).sort(sortLvNama);
+  const pasangan = {}, total = {}, terakhir = {}, bulanan = {};
   const catat = (mId, kId, t) => {
-    const key = mId + '|' + kId;
-    pasangan[key] = (pasangan[key] || 0) + 1;
+    pasangan[mId + '|' + kId] = (pasangan[mId + '|' + kId] || 0) + 1;
     total[kId] = (total[kId] || 0) + 1;
+    bulanan[kId + '|' + t.slice(0, 7)] = (bulanan[kId + '|' + t.slice(0, 7)] || 0) + 1;
     if (!terakhir[kId] || t > terakhir[kId]) terakhir[kId] = t;
   };
-  S.data.jadwal.forEach(j => catat(j.masjidId, j.khotibId, j.tanggal));
+  S.data.jadwal.filter(sah).forEach(j => catat(j.masjidId, j.khotibId, j.tanggal));
 
-  const TIDAK_BOLEH = 1e12, KOSONG = 1e11, ULANG = 1e7, BEBAN = 1e3;
+  const TIDAK_BOLEH = 1e12, KOSONG = 1e11, LEWAT_BATAS = 5e10, ULANG = 1e7, BEBAN = 1e3;
   const hasil = [];
-  const d = jumatBerikut(parseYmd(mulai));
-  for (let w = 0; w < minggu; w++) {
-    const t = ymd(d);
+  for (const t of tanggalList) {
     const ada = S.data.jadwal.filter(j => j.tanggal === t);
-    const kSibuk = new Set(ada.map(j => j.khotibId));
-    const mKosong = ms.filter(m => !ada.some(j => j.masjidId === m.id));
+    const kSibuk = new Set(ada.filter(sah).map(j => j.khotibId));
+    const mKosong = ms.filter(m => masjidTerjadwal(m, t) && !ada.some(j => j.masjidId === m.id));
     const kBebas = kh.filter(k => !kSibuk.has(k.id));
-    if (mKosong.length) {
-      const hariIni = parseYmd(t).getTime();
-      const biaya = mKosong.map(m => {
-        const layak = kBebas.filter(k => bolehDi(k, m));
-        // putaran masjid ini = jumlah tugas minimum di antara SEMUA khotib yang sesuai level
-        const semua = kh.filter(k => bolehDi(k, m)).map(k => pasangan[m.id + '|' + k.id] || 0);
-        const putaran = semua.length ? Math.min(...semua) : 0;
-        const baris = kBebas.map(k => {
-          if (!layak.includes(k)) return TIDAK_BOLEH;
-          const ulang = (pasangan[m.id + '|' + k.id] || 0) - putaran;          // >0 artinya sudah dapat giliran di putaran ini
-          const pekanLalu = terakhir[k.id] ? Math.round((hariIni - parseYmd(terakhir[k.id]).getTime()) / 6048e5) : 999;
-          return ulang * ULANG + (total[k.id] || 0) * BEBAN + Math.max(0, 500 - pekanLalu);
-        });
-        return baris.concat(mKosong.map(() => KOSONG));                      // kolom cadangan = slot kosong
-      });
-      const pilih = hungaria(biaya);
-      mKosong.forEach((m, i) => {
-        const j = pilih[i];
-        const k = j >= 0 && j < kBebas.length && biaya[i][j] < KOSONG ? kBebas[j] : null;
-        if (!k) { hasil.push({ tanggal: t, masjidId: m.id, khotibId: '', masalah: true }); return; }
-        catat(m.id, k.id, t);
-        hasil.push({ tanggal: t, masjidId: m.id, khotibId: k.id });
-      });
-    }
-    d.setDate(d.getDate() + 7);
+    if (!mKosong.length) continue;
+    const hariIni = parseYmd(t).getTime(), ym = t.slice(0, 7);
+    const biaya = mKosong.map(m => {
+      const layak = kh.filter(k => bolehDi(k, m));
+      const sama = layak.filter(k => k.level === m.level);
+      const pool = gapW && sama.length ? sama : layak;
+      const putaran = pool.length ? Math.min(...pool.map(k => pasangan[m.id + '|' + k.id] || 0)) : 0;
+      return kBebas.map(k => {
+        if (!bolehDi(k, m)) return TIDAK_BOLEH;
+        const ulang = Math.max(0, (pasangan[m.id + '|' + k.id] || 0) - putaran);
+        const bln = bulanan[k.id + '|' + ym] || 0;
+        const pekanLalu = terakhir[k.id] ? Math.round((hariIni - parseYmd(terakhir[k.id]).getTime()) / 6048e5) : 99;
+        let c = ulang * ULANG + (m.level - k.level) * gapW + (total[k.id] || 0) * BEBAN + bln * 4 * BEBAN;
+        if (pekanLalu <= 1) c += 2 * BEBAN;
+        if (batas && bln >= batas) c += LEWAT_BATAS;
+        return c;
+      }).concat(mKosong.map(() => KOSONG));
+    });
+    const pilih = hungaria(biaya);
+    mKosong.forEach((m, i) => {
+      const j = pilih[i];
+      const k = j >= 0 && j < kBebas.length && biaya[i][j] < KOSONG ? kBebas[j] : null;
+      if (!k) { hasil.push({ tanggal: t, masjidId: m.id, khotibId: '' }); return; }
+      catat(m.id, k.id, t);
+      hasil.push({ tanggal: t, masjidId: m.id, khotibId: k.id, lewatBatas: biaya[i][j] >= LEWAT_BATAS });
+    });
   }
   return hasil;
 }
 
 function buatPreview() {
-  const mulai = $('#rtMulai').value;
-  if (!mulai) return toast('Pilih tanggal mulai.', 'bad');
-  if (!S.data.masjid.some(m => m.aktif)) return toast('Belum ada masjid aktif.', 'bad');
+  const mulai = $('#rtBulan').value;
+  if (!mulai) return toast('Pilih bulan mulai.', 'bad');
+  if (!S.data.masjid.some(m => m.aktif)) return toast('Belum ada masjid aktif. Impor data pesantren dulu.', 'bad');
   if (!S.data.khotib.some(k => k.aktif)) return toast('Belum ada khotib aktif.', 'bad');
-  S.preview = buatRotasi(mulai, Number($('#rtMinggu').value));
+  const hariIni = ymd(new Date());
+  let tgl = [];
+  for (let i = 0; i < Number($('#rtJumlah').value); i++) tgl = tgl.concat(jumatDalamBulan(tambahBulan(mulai, i)));
+  tgl = tgl.filter(t => t >= hariIni);
+  if (!tgl.length) return toast('Semua Jumat pada rentang itu sudah lewat.', 'bad');
+  S.preview = buatRotasi(tgl, { prioritas: $('#rtPrioritas').value, batas: $('#rtBatas').value });
   renderPreview();
   if (!S.preview.length) toast('Semua masjid pada rentang itu sudah punya jadwal.', 'ok');
 }
@@ -848,104 +960,241 @@ function renderPreview() {
   if (!P.length) { $('#rtPreview').innerHTML = ''; return; }
   const grup = {};
   P.forEach((p, i) => (grup[p.tanggal] = grup[p.tanggal] || []).push(i));
-  const masalah = P.filter(p => !p.khotibId).length;
+  const kosong = P.filter(p => !p.khotibId).length;
+  const lewat = P.filter(p => p.lewatBatas).length;
   let h = `<div class="panel"><div class="row" style="margin-top:0;justify-content:space-between">
       <h3 style="margin:0">Pratinjau: ${P.filter(p => p.khotibId).length} jadwal di ${Object.keys(grup).length} Jumat</h3>
       <div class="row" style="margin:0"><button class="btn ghost" onclick="S.preview=[];renderPreview()">Buang pratinjau</button>
       <button class="btn" onclick="simpanPreview()">Simpan semua</button></div></div>`;
-  if (masalah) h += `<div class="note warn">${masalah} slot tidak bisa diisi karena kekurangan khotib yang sesuai level. Slot itu tidak ikut disimpan; tambah khotib atau isi manual.</div>`;
+  if (kosong) h += `<div class="note warn">${kosong} slot tidak bisa diisi karena tidak ada khotib yang sesuai level dan masih bebas. Slot itu tidak ikut disimpan.</div>`;
+  if (lewat) h += `<div class="note warn">${lewat} penugasan melewati batas per bulan karena kekurangan khotib; ditandai "lewat batas".</div>`;
   h += Object.keys(grup).sort().map(t => {
     const dipakai = new Set(grup[t].map(i => P[i].khotibId).filter(Boolean));
-    S.data.jadwal.filter(j => j.tanggal === t).forEach(j => dipakai.add(j.khotibId));
-    return `<div class="group-h"><b>${tglPanjang(t)}</b></div><div class="tbl-wrap"><table><tbody>` +
+    S.data.jadwal.filter(j => j.tanggal === t && sah(j)).forEach(j => dipakai.add(j.khotibId));
+    return `<div class="group-h"><b>${tglPanjang(t)} · Pekan ${ROM[pekanKe(t)]}</b><span style="color:var(--muted);font-size:13px">${grup[t].length} masjid</span></div><div class="tbl-wrap"><table><tbody>` +
       grup[t].map(i => {
         const p = P[i], m = M(p.masjidId);
-        const opsi = S.data.khotib.filter(k => k.aktif && bolehDi(k, m) && (k.id === p.khotibId || !dipakai.has(k.id))).sort(sortNama);
-        return `<tr><td style="width:40%">${esc(m.nama)} ${lv(m.level)}</td>
+        const opsi = S.data.khotib.filter(k => k.aktif && bolehDi(k, m) && (k.id === p.khotibId || !dipakai.has(k.id))).sort(sortLvNama);
+        return `<tr><td style="width:42%">${LV[m.level]} ${esc(m.nama)}</td>
           <td><select onchange="gantiPreview(${i},this.value)" style="padding:7px;border:1px solid #c5cec8;border-radius:7px;max-width:100%">
             <option value="">${p.khotibId ? '— kosongkan —' : '— tidak ada khotib —'}</option>
-            ${opsi.map(k => `<option value="${k.id}" ${k.id === p.khotibId ? 'selected' : ''}>${esc(k.nama)} · L${k.level}</option>`).join('')}
-          </select> ${!p.khotibId ? '<span class="tag bad">kosong</span>' : ''}</td>
+            ${opsi.map(k => `<option value="${k.id}" ${k.id === p.khotibId ? 'selected' : ''}>${LV[k.level]} ${esc(k.nama)}</option>`).join('')}
+          </select> ${!p.khotibId ? '<span class="tag bad">kosong</span>' : ''}${p.lewatBatas ? ' <span class="tag warn">lewat batas</span>' : ''}</td>
           <td class="act"><button class="btn sm danger" onclick="S.preview.splice(${i},1);renderPreview()">Buang</button></td></tr>`;
       }).join('') + `</tbody></table></div>`;
   }).join('');
   $('#rtPreview').innerHTML = h + '</div>';
 }
 
-function gantiPreview(i, kId) {
-  S.preview[i].khotibId = kId;
-  S.preview[i].masalah = !kId;
-  renderPreview();
-}
+function gantiPreview(i, kId) { S.preview[i].khotibId = kId; S.preview[i].lewatBatas = false; renderPreview(); }
 
 async function simpanPreview() {
-  const items = S.preview.filter(p => p.khotibId).map(p => ({ tanggal: p.tanggal, masjidId: p.masjidId, khotibId: p.khotibId, catatan: 'Rotasi otomatis' }));
+  const items = S.preview.filter(p => p.khotibId).map(p => ({ tanggal: p.tanggal, masjidId: p.masjidId, khotibId: p.khotibId, catatan: '' }));
   if (!items.length) return toast('Tidak ada jadwal yang bisa disimpan.', 'bad');
   try {
     const r = await api('saveJadwalBatch', { items });
-    S.preview = [];
-    renderPreview();
+    S.preview = []; renderPreview();
     toast(`${r.hasil.tersimpan} jadwal disimpan.`, 'ok');
     if (r.hasil.gagal.length) toast(`${r.hasil.gagal.length} jadwal gagal: ${r.hasil.gagal[0].pesan}`, 'bad');
   } catch (e) { toast(e.message, 'bad'); }
 }
 
+/* ---------- Cadangan ---------- */
+// sudah: {khotibId: berapa kali sudah jadi cadangan bulan ini} agar cadangan bergilir antarpekan
+function pilihCadangan(t, n, sudah = {}) {
+  if (!n) return [];
+  const ym = t.slice(0, 7);
+  const sibuk = new Set(S.data.jadwal.filter(j => j.tanggal === t && sah(j)).map(j => j.khotibId));
+  const bln = hitung(j => j.tanggal.startsWith(ym)), tot = hitung();
+  const skor = k => (bln[k.id] || 0) + (sudah[k.id] || 0) * 2;
+  const pool = S.data.khotib.filter(k => k.aktif && !sibuk.has(k.id))
+    .sort((a, b) => skor(a) - skor(b) || (tot[a.id] || 0) - (tot[b.id] || 0) || sortLvNama(a, b));
+  const pilih = [];
+  const senior = pool.find(k => k.level === 1);           // minimal satu ❶ agar bisa menggantikan di masjid mana pun
+  if (senior) pilih.push(senior);
+  for (const k of pool) { if (pilih.length >= n) break; if (!pilih.includes(k)) pilih.push(k); }
+  pilih.forEach(k => sudah[k.id] = (sudah[k.id] || 0) + 1);
+  return pilih.sort(sortLvNama);
+}
+
+// Urutan cetak: per level, lalu per pekan pertama masjid bertugas (seperti lembar pesantren), lalu nama.
+const pekanPertama = m => daftar(m.pekan)[0] || 0;
+const sortCetak = (a, b) => a.level - b.level || pekanPertama(a) - pekanPertama(b) || daftar(b.pekan).length - daftar(a.pekan).length || sortNama(a, b);
+
+/* ---------- Rekap ---------- */
+function daftarBulan(dari, sampai) {
+  const out = [];
+  if (!dari || !sampai || dari > sampai) return out;
+  for (let b = dari; b <= sampai && out.length < 24; b = tambahBulan(b, 1)) out.push(b);
+  return out;
+}
+
+function dataRekap() {
+  const bulan = daftarBulan($('#rkDari').value, $('#rkSampai').value);
+  const rows = [...S.data.khotib].sort((a, b) => (b.aktif - a.aktif) || sortLvNama(a, b)).map(k => {
+    const per = bulan.map(b => S.data.jadwal.filter(j => j.khotibId === k.id && sah(j) && j.tanggal.startsWith(b)).length);
+    const batal = S.data.jadwal.filter(j => j.khotibId === k.id && !sah(j) && bulan.some(b => j.tanggal.startsWith(b))).length;
+    return { k, per, total: per.reduce((a, b) => a + b, 0), batal };
+  });
+  return { bulan, rows };
+}
+
+function renderRekap() {
+  const { bulan, rows } = dataRekap();
+  if (!bulan.length) { $('#rkTabel').innerHTML = '<p class="empty">Pilih rentang bulan yang benar.</p>'; }
+  else {
+    $('#rkTabel').innerHTML = `<table><thead><tr><th>Khotib</th><th>Level</th>${bulan.map(b => `<th class="num">${BLN[Number(b.slice(5))]} ${b.slice(2, 4)}</th>`).join('')}<th class="num">Total</th><th class="num">Batal</th></tr></thead><tbody>` +
+      rows.map(r => `<tr class="clk ${r.k.aktif ? '' : 'off'}" onclick="detailKhotib('${r.k.id}')"><td><b>${esc(r.k.nama)}</b></td><td>${lv(r.k.level)}</td>
+        ${r.per.map(n => `<td class="num">${n || '<span style="color:#b8c2bc">0</span>'}</td>`).join('')}<td class="num"><b>${r.total}</b></td><td class="num">${r.batal || ''}</td></tr>`).join('') + `</tbody></table>`;
+  }
+  const sel = $('#rkMasjid'), v = sel.value;
+  sel.innerHTML = '<option value="">Pilih masjid</option>' + [...S.data.masjid].sort(sortLvNama).map(m => `<option value="${m.id}">${LV[m.level]} ${esc(m.nama)}</option>`).join('');
+  sel.value = v;
+  renderRiwayatMasjid();
+  if (S.detail) detailKhotib(S.detail);
+  renderPutaran();
+}
+
+function detailKhotib(id) {
+  const k = K(id); if (!k) return;
+  S.detail = id;
+  const js = S.data.jadwal.filter(j => j.khotibId === id).sort((a, b) => b.tanggal.localeCompare(a.tanggal));
+  const perM = {};
+  js.filter(sah).forEach(j => perM[j.masjidId] = (perM[j.masjidId] || 0) + 1);
+  const layak = S.data.masjid.filter(m => m.aktif && bolehDi(k, m));
+  const belum = layak.filter(m => !perM[m.id]);
+  $('#rkDetail').innerHTML = `<h3>Riwayat ${esc(k.nama)} ${lv(k.level)}</h3>
+    <p style="color:var(--muted);margin-bottom:10px">${js.filter(sah).length} khotbah di ${Object.keys(perM).length} masjid. ${belum.length ? `Belum pernah di ${belum.length} dari ${layak.length} masjid yang sesuai levelnya.` : 'Sudah pernah di semua masjid yang sesuai levelnya.'}</p>
+    ${js.length ? `<div class="tbl-wrap"><table><thead><tr><th>Tanggal</th><th>Pekan</th><th>Masjid</th><th>Keterangan</th></tr></thead><tbody>${js.map(j =>
+      `<tr><td>${tglPanjang(j.tanggal)}</td><td>${ROM[pekanKe(j.tanggal)]}</td><td>${esc(M(j.masjidId)?.nama || '(terhapus)')}</td><td>${j.status === 'BATAL' ? '<span class="tag bad">Batal</span> ' : ''}${esc(j.catatan)}</td></tr>`).join('')}</tbody></table></div>` : '<p class="empty">Belum ada riwayat.</p>'}`;
+}
+
+function renderRiwayatMasjid() {
+  const m = M($('#rkMasjid').value);
+  if (!m) { $('#rkMasjidOut').innerHTML = ''; return; }
+  const js = S.data.jadwal.filter(j => j.masjidId === m.id).sort((a, b) => b.tanggal.localeCompare(a.tanggal));
+  const sudah = new Set(js.filter(sah).map(j => j.khotibId));
+  const belum = S.data.khotib.filter(k => k.aktif && bolehDi(k, m) && !sudah.has(k.id)).sort(sortLvNama);
+  $('#rkMasjidOut').innerHTML = `<p style="color:var(--muted);margin:10px 0">Pekan ${teksPekan(m)} · ${teksBulan(m)} · ${js.filter(sah).length} khotbah tercatat.</p>
+    ${js.length ? `<div class="tbl-wrap"><table><thead><tr><th>Tanggal</th><th>Khotib</th><th>Keterangan</th></tr></thead><tbody>${js.map(j =>
+      `<tr><td>${tglPanjang(j.tanggal)}</td><td>${esc(K(j.khotibId)?.nama || '(terhapus)')}</td><td>${j.status === 'BATAL' ? '<span class="tag bad">Batal</span> ' : ''}${esc(j.catatan)}</td></tr>`).join('')}</tbody></table></div>` : ''}
+    ${belum.length ? `<div class="note ok">Belum pernah bertugas di sini (${belum.length}): ${belum.map(k => esc(k.nama)).join(', ')}</div>` : ''}`;
+}
+
+function renderPutaran() {
+  const kh = S.data.khotib.filter(k => k.aktif);
+  const rows = S.data.masjid.filter(m => m.aktif).sort(sortLvNama).map(m => {
+    const elig = kh.filter(k => bolehDi(k, m));
+    const cnt = {};
+    S.data.jadwal.filter(j => j.masjidId === m.id && sah(j)).forEach(j => cnt[j.khotibId] = (cnt[j.khotibId] || 0) + 1);
+    const c = elig.map(k => cnt[k.id] || 0);
+    const min = c.length ? Math.min(...c) : 0;
+    return { m, total: elig.length, putaran: min + 1, sudah: c.filter(x => x > min).length };
+  });
+  $('#tbProgres').innerHTML = rows.length ? rows.map(p => {
+    const pct = p.total ? Math.round(p.sudah / p.total * 100) : 0;
+    return `<tr><td>${esc(p.m.nama)}</td><td>${lv(p.m.level)}</td><td>Ke-${p.putaran}</td>
+      <td><div class="bar"><i style="width:${pct}%"></i></div></td>
+      <td>${p.total ? `${p.sudah} dari ${p.total} khotib` : '<span class="tag bad">Tidak ada khotib sesuai level</span>'}</td></tr>`;
+  }).join('') : `<tr><td colspan="5" class="empty">Belum ada masjid aktif.</td></tr>`;
+}
+
+function unduhCsv() {
+  const { bulan, rows } = dataRekap();
+  if (!bulan.length) return toast('Pilih rentang bulan yang benar.', 'bad');
+  const q = s => `"${String(s).replace(/"/g, '""')}"`;
+  const baris = [['No', 'Nama Khotib', 'Level', ...bulan.map(blnPanjang), 'Total', 'Batal'].map(q).join(';')];
+  rows.forEach((r, i) => baris.push([i + 1, r.k.nama, r.k.level, ...r.per, r.total, r.batal].map(q).join(';')));
+  const blob = new Blob(['\ufeff' + baris.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `rekap-khotib-${bulan[0]}_${bulan[bulan.length - 1]}.csv`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
 /* ---------- Cetak ---------- */
-function isiTanggalCetak() {
-  const sel = $('#ctTanggal'), v = sel.value;
-  const tgl = [...new Set(S.data.jadwal.map(j => j.tanggal))].sort().reverse();
-  sel.innerHTML = tgl.length ? tgl.map(t => `<option value="${t}">${tglPanjang(t)}</option>`).join('') : '<option value="">Belum ada jadwal</option>';
-  const def = ymd(jumatBerikut());
-  sel.value = tgl.includes(v) ? v : (tgl.includes(def) ? def : (tgl[0] || ''));
+function simpanTtd() {
+  try { localStorage.setItem('jk_ttd', JSON.stringify({ jabatan: $('#ctJabatan').value, nama: $('#ctNama').value })); } catch (e) { }
+}
+
+function sel(j) {
+  const k = K(j.khotibId);
+  const nama = esc(k?.nama || '-');
+  return j.status === 'BATAL' ? `<span class="btl">${nama} (Batal)</span>` : nama;
 }
 
 function renderCetak() {
-  isiTanggalCetak();
   const mode = $('#ctMode').value;
-  const kontak = $('#ctKontak').value === 'ya';
+  const nCad = Number($('#ctCadangan').value);
+  const tampilSemua = $('#ctNonaktif').value === 'tampil';
   $('#ctTglWrap').classList.toggle('hidden', mode !== 'tanggal');
   $('#ctBlnWrap').classList.toggle('hidden', mode !== 'bulan');
-  let list, judul;
-  if (mode === 'tanggal') {
-    const t = $('#ctTanggal').value;
-    list = S.data.jadwal.filter(j => j.tanggal === t);
-    judul = t ? tglPanjang(t) : '';
-  } else {
+  const pa = $('#printArea');
+  pa.className = mode === 'bulan' ? 'landscape' : 'portrait';
+  $('#pageStyle').textContent = `@page{size:A4 ${mode === 'bulan' ? 'landscape' : 'portrait'};margin:10mm}`;
+
+  let isi = '', judul = '';
+  if (mode === 'bulan') {
     const b = $('#ctBulan').value;
-    list = S.data.jadwal.filter(j => b && j.tanggal.startsWith(b));
-    judul = b ? 'Bulan ' + blnPanjang(b) : '';
-  }
-  const rows = list.map(j => ({ j, m: M(j.masjidId), k: K(j.khotibId) }))
-    .sort((a, b) => a.j.tanggal.localeCompare(b.j.tanggal) || (a.m?.nama || '').localeCompare(b.m?.nama || ''));
-  const kol = kontak ? 5 : 4;
-  let body = '', no = 0, tglAkhir = '';
-  rows.forEach(({ j, m, k }) => {
-    if (mode === 'bulan' && j.tanggal !== tglAkhir) {
-      tglAkhir = j.tanggal; no = 0;
-      body += `<tr class="pdate"><td colspan="${kol}">${tglPanjang(j.tanggal)}</td></tr>`;
+    const tgl = b ? jumatDalamBulan(b) : [];
+    judul = b ? 'BULAN ' + blnPanjang(b).toUpperCase() : '';
+    const ms = S.data.masjid.filter(m => tampilSemua ? m.aktif : (tgl.some(t => masjidTerjadwal(m, t)) || S.data.jadwal.some(j => j.masjidId === m.id && tgl.includes(j.tanggal))))
+      .sort(sortCetak);
+    let no = 0, body = '';
+    [1, 2, 3].forEach(L => {
+      const grup = ms.filter(m => m.level === L);
+      if (!grup.length) return;
+      body += `<tr class="lvrow"><td colspan="${tgl.length + 2}">${LV[L]} Masjid Level ${L}</td></tr>`;
+      grup.forEach(m => {
+        no++;
+        body += `<tr><td style="text-align:center">${no}</td><td>${esc(m.nama)}</td>` + tgl.map(t => {
+          const js = S.data.jadwal.filter(j => j.tanggal === t && j.masjidId === m.id);
+          if (js.length) return `<td>${js.map(sel).join('<br>')}</td>`;
+          return masjidTerjadwal(m, t) ? '<td class="kosong"></td>' : '<td class="na"></td>';
+        }).join('') + '</tr>';
+      });
+    });
+    if (nCad) {
+      const sudahCad = {};
+      body += `<tr class="lvrow"><td colspan="${tgl.length + 2}">Cadangan</td></tr><tr class="cad"><td></td><td></td>` +
+        tgl.map(t => `<td>${pilihCadangan(t, nCad, sudahCad).map((k, i) => `${i + 1}. ${esc(k.nama)}`).join('<br>')}</td>`).join('') + '</tr>';
     }
-    no++;
-    body += `<tr><td style="text-align:center;width:40px">${no}</td><td>${esc(m?.nama || '-')}</td><td>${esc(m?.lokasi || '')}</td><td><b>${esc(k?.nama || '-')}</b></td>${kontak ? `<td>${esc(k?.kontak || '')}</td>` : ''}</tr>`;
-  });
+    isi = tgl.length && ms.length ? `<table><thead><tr><th style="width:34px">No</th><th style="min-width:200px">Nama Masjid</th>${tgl.map(t => `<th>PEKAN ${ROM[pekanKe(t)]}<br><span style="font-weight:400">${tglPendek(t)}</span></th>`).join('')}</tr></thead><tbody>${body}</tbody></table>`
+      : '<div class="empty">Tidak ada masjid yang dijadwalkan pada bulan ini.</div>';
+  } else {
+    const t = $('#ctTanggal').value;
+    judul = t ? `${tglPanjang(t).toUpperCase()} (PEKAN ${ROM[pekanKe(t)]})` : '';
+    const ms = S.data.masjid.filter(m => masjidTerjadwal(m, t) || S.data.jadwal.some(j => j.masjidId === m.id && j.tanggal === t)).sort(sortLvNama);
+    let body = '', no = 0;
+    ms.forEach(m => {
+      const js = S.data.jadwal.filter(j => j.tanggal === t && j.masjidId === m.id);
+      no++;
+      body += `<tr><td style="text-align:center">${no}</td><td>${LV[m.level]} ${esc(m.nama)}</td><td>${js.length ? js.map(sel).join('<br>') : '<i style="color:#999">belum diisi</i>'}</td><td>${esc(js.map(j => K(j.khotibId)?.kontak || '').filter(Boolean).join(', '))}</td></tr>`;
+    });
+    isi = ms.length ? `<table><thead><tr><th>No</th><th>Masjid</th><th>Khotib</th><th>Kontak</th></tr></thead><tbody>${body}</tbody></table>` : '<div class="empty">Tidak ada masjid yang dijadwalkan pada tanggal ini.</div>';
+    if (nCad && t) isi += `<p style="margin-top:12px;font-size:13px"><b>Cadangan:</b> ${pilihCadangan(t, nCad).map((k, i) => `${i + 1}. ${esc(k.nama)}`).join(' &nbsp; ')}</p>`;
+  }
+  const catatan = $('#ctCatatan').value.trim();
   const hariIni = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-  $('#printArea').innerHTML = `
+  pa.innerHTML = `
     <div class="kop"><h2>PONDOK PESANTREN WIHDATUL UMMAH POSO</h2><p>Jadwal Penugasan Khotib Jumat</p></div>
-    <div class="ptitle">JADWAL KHOTIB JUMAT</div>
+    <div class="ptitle">JADWAL KHUTBAH JUMAT</div>
     <div class="psub">${esc(judul)}</div>
-    ${rows.length ? `<table><thead><tr><th style="text-align:center">No</th><th>Masjid</th><th>Lokasi</th><th>Khotib</th>${kontak ? '<th>Kontak</th>' : ''}</tr></thead><tbody>${body}</tbody></table>`
-      : '<div class="empty">Tidak ada jadwal pada periode ini.</div>'}
-    <div class="pfoot"><div>Poso, ${hariIni}<br>Mudir,<br><br><br><br><b>Muh. Idul Fitran, S.H.</b></div></div>`;
+    ${isi}
+    ${catatan ? `<div class="pcat"><b>Catatan:</b>\n${esc(catatan)}</div>` : ''}
+    <div class="pfoot"><div>Poso, ${hariIni}<br>${esc($('#ctJabatan').value)}<br><br><br><br><b>${esc($('#ctNama').value)}</b></div></div>`;
 }
 
 function namaFile(ext) {
-  const mode = $('#ctMode').value;
-  const v = mode === 'tanggal' ? $('#ctTanggal').value : $('#ctBulan').value;
-  return `jadwal-khotib-${v || 'jumat'}.${ext}`;
+  const v = $('#ctMode').value === 'bulan' ? $('#ctBulan').value : $('#ctTanggal').value;
+  return `jadwal-khutbah-${v || 'jumat'}.${ext}`;
 }
 
 async function kanvas() {
   if (!window.html2canvas) throw new Error('Pustaka gambar gagal dimuat. Periksa internet lalu muat ulang halaman.');
-  return html2canvas($('#printArea'), { scale: 2, backgroundColor: '#ffffff' });
+  const el = $('#printArea');
+  return html2canvas(el, { scale: 2, backgroundColor: '#ffffff', windowWidth: el.scrollWidth + 40 });
 }
 
 async function unduhPng() {
@@ -960,8 +1209,9 @@ async function unduhPdf() {
   try {
     if (!window.jspdf) throw new Error('Pustaka PDF gagal dimuat. Periksa internet lalu muat ulang halaman.');
     const c = await kanvas();
-    const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
-    const margin = 10, w = 210 - margin * 2, hHal = 297 - margin * 2;
+    const land = $('#ctMode').value === 'bulan';
+    const pdf = new window.jspdf.jsPDF(land ? 'l' : 'p', 'mm', 'a4');
+    const W = land ? 297 : 210, H = land ? 210 : 297, mg = 8, w = W - mg * 2, hHal = H - mg * 2;
     const pxPerHal = Math.floor(c.width * hHal / w);
     for (let y = 0, hal = 0; y < c.height; y += pxPerHal, hal++) {
       const tinggi = Math.min(pxPerHal, c.height - y);
@@ -969,13 +1219,26 @@ async function unduhPdf() {
       pot.width = c.width; pot.height = tinggi;
       pot.getContext('2d').drawImage(c, 0, y, c.width, tinggi, 0, 0, c.width, tinggi);
       if (hal > 0) pdf.addPage();
-      pdf.addImage(pot.toDataURL('image/png'), 'PNG', margin, margin, w, tinggi * w / c.width);
+      pdf.addImage(pot.toDataURL('image/png'), 'PNG', mg, mg, w, tinggi * w / c.width);
     }
     pdf.save(namaFile('pdf'));
   } catch (e) { toast(e.message, 'bad'); }
 }
 
 /* ---------- Pengaturan ---------- */
+async function imporData() {
+  const ada = S.data.khotib.length + S.data.masjid.length;
+  if (!confirm(ada ? 'Data yang namanya sama akan diperbarui (level, pekan, status). Nomor kontak yang sudah diisi tidak diubah. Lanjutkan?' : 'Isi database dengan data khotib dan masjid pesantren?')) return;
+  try {
+    const r = await api('imporDataPesantren');
+    const h = r.hasil;
+    $('#imporOut').innerHTML = `<div class="note ok">Selesai. Khotib: ${h.khotibBaru} baru, ${h.khotibDiperbarui} diperbarui. Masjid: ${h.masjidBaru} baru, ${h.masjidDiperbarui} diperbarui. Jadwal: ${h.jadwalBaru} ditambahkan, ${h.jadwalDilewati} dilewati karena sudah ada.${h.contohDihapus ? ` Data contoh dihapus: ${h.contohDihapus}.` : ''}</div>`;
+    toast('Impor data selesai.', 'ok');
+  } catch (e) {
+    $('#imporOut').innerHTML = `<div class="note bad">${esc(e.message)}${/tidak dikenal/.test(e.message) ? ' — Kode.gs di server belum v6.1. Tempel Kode.gs terbaru lalu buat Versi baru di Kelola deployment.' : ''}</div>`;
+  }
+}
+
 async function gantiPin() {
   const a = $('#pinBaru').value.trim(), b = $('#pinBaru2').value.trim();
   if (a.length < 4) return toast('PIN minimal 4 karakter.', 'bad');
@@ -990,7 +1253,7 @@ async function gantiPin() {
 }
 
 async function tesKoneksi() {
-  try { await api('ping'); toast('Koneksi ke Google Sheets berjalan baik.', 'ok'); }
+  try { const r = await api('ping'); toast(`Koneksi baik. Server v${r.versi}.`, 'ok'); }
   catch (e) { toast(e.message, 'bad'); }
 }
 
@@ -1011,30 +1274,48 @@ function pasangEvent() {
   document.querySelectorAll('nav button').forEach(b => b.onclick = () => bukaTab(b.dataset.tab));
 
   $('#btnKhSimpan').onclick = simpanKhotib; $('#btnKhBatal').onclick = resetFormKhotib;
+  $('#khCari').oninput = renderKhotib;
   $('#btnMsSimpan').onclick = simpanMasjid; $('#btnMsBatal').onclick = resetFormMasjid;
+  $('#msCari').oninput = renderMasjid; $('#msFilterPekan').onchange = renderMasjid;
 
   $('#btnJdSimpan').onclick = simpanJadwal; $('#btnJdBatal').onclick = resetFormJadwal;
-  $('#jdTanggal').onchange = () => isiPilihanKhotib($('#jdKhotib').value);
+  $('#jdTanggal').onchange = isiPilihanJadwal;
   $('#jdMasjid').onchange = () => isiPilihanKhotib($('#jdKhotib').value);
   $('#jdKhotib').onchange = petunjukJadwal;
+  $('#jdStatus').onchange = petunjukJadwal;
   $('#jdBulan').onchange = renderJadwal;
 
   $('#btnRtBuat').onclick = buatPreview;
 
-  ['#ctMode', '#ctTanggal', '#ctBulan', '#ctKontak'].forEach(s => $(s).onchange = renderCetak);
-  $('#btnPng').onclick = unduhPng; $('#btnPdf').onclick = unduhPdf; $('#btnPrint').onclick = () => window.print();
+  ['#rkDari', '#rkSampai'].forEach(s => $(s).onchange = renderRekap);
+  $('#rkMasjid').onchange = renderRiwayatMasjid;
+  $('#btnCsv').onclick = unduhCsv;
 
+  ['#ctMode', '#ctBulan', '#ctTanggal', '#ctCadangan', '#ctNonaktif'].forEach(s => $(s).onchange = renderCetak);
+  ['#ctCatatan', '#ctJabatan', '#ctNama'].forEach(s => $(s).oninput = () => { simpanTtd(); renderCetak(); });
+  $('#btnPng').onclick = unduhPng; $('#btnPdf').onclick = unduhPdf; $('#btnPrint').onclick = () => { renderCetak(); window.print(); };
+
+  $('#btnImpor').onclick = imporData;
   $('#btnGantiPin').onclick = gantiPin; $('#btnTes').onclick = tesKoneksi; $('#btnGantiUrl').onclick = gantiUrl;
-  $('#btnRefresh').dataset.busy = 'yes';
 }
 
 async function init() {
+  buatChips();
   pasangEvent();
   const jb = ymd(jumatBerikut());
+  const bl = jb.slice(0, 7);
   $('#jdTanggal').value = jb;
-  $('#rtMulai').value = jb;
-  $('#jdBulan').value = jb.slice(0, 7);
-  $('#ctBulan').value = jb.slice(0, 7);
+  $('#jdBulan').value = bl;
+  $('#rtBulan').value = bl;
+  $('#rkSampai').value = bl;
+  $('#rkDari').value = tambahBulan(bl, -5);
+  $('#ctBulan').value = bl;
+  $('#ctTanggal').value = jb;
+  setChips('#msPekan', '1');
+  let ttd = {};
+  try { ttd = JSON.parse(localStorage.getItem('jk_ttd') || '{}'); } catch (e) { }
+  $('#ctJabatan').value = ttd.jabatan ?? 'Mudir,';
+  $('#ctNama').value = ttd.nama ?? 'Muh. Idul Fitran, S.H.';
 
   S.url = CONFIG.API_URL || localStorage.getItem('jk_url') || '';
   S.pin = localStorage.getItem('jk_pin') || sessionStorage.getItem('jk_pin') || '';
