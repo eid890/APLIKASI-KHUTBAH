@@ -523,9 +523,9 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
    Tempel URL /exec dari Apps Script (Deploy → Kelola deployment).
    ===================================================================== */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbxWkEpmnOvLFWOT8Uba9AGcQ3j2D18lfr2YdiXwEG0VGMYJ6qLfNpn4OmVYSape/exec'
+  API_URL: 'https://script.google.com/macros/s/AKfycbwehK-808c6meC20B8W47f9yi8sx5XZCS3PMKHutKnEwp2oIY6qNN_stEVebQus5dV9/exec'
 };
-const VERSI_APP = '6.4';
+const VERSI_APP = '6.5';
 const ORG = {
   nama: 'Departemen Dakwah dan Kaderisasi',
   induk: 'Dewan Pimpinan Daerah Wahdah Islamiyah Poso',
@@ -1343,14 +1343,80 @@ function buatRotasi(tanggalList, opsi = {}) {
       });
       if (!langgar) break;
     }
-    mKosong.forEach((m, i) => {
-      const x = dipilih[i];
-      if (!x) { hasil.push({ tanggal: t, masjidId: m.id, khotibId: '' }); return; }
-      catat(m.id, x.k.id, t);
-      hasil.push({ tanggal: t, masjidId: m.id, khotibId: x.k.id });
+    const isi = {};
+    mKosong.forEach((m, i) => { const x = dipilih[i]; if (x) { catat(m.id, x.k.id, t); isi[m.id] = { khotibId: x.k.id }; } });
+
+    // ---- Tahap pengecualian: isi slot yang masih kosong dengan melonggarkan aturan paling ringan lebih dulu.
+    // Tidak pernah dilonggarkan: satu ustadz satu masjid per Jumat, larangan masjid, kuota kelompok.
+    let sisa = mKosong.filter(m => !isi[m.id]);
+    if (sisa.length) {
+      const bertugas = new Set([...kSibuk, ...Object.values(isi).map(x => x.khotibId)]);
+      const H = { pair: pasangan, bln: bulanan };
+      for (const tahap of [1, 2, 3]) {       // 1: giliran, 2: + batas bulanan, 3: + level
+        // masjid dengan calon paling sedikit diisi lebih dulu
+        const calonUntuk = m => kh.filter(k => !bertugas.has(k.id) && !dilarang(k, m) && !kelompokPenuh(k.id, [...bertugas]).length
+          && (tahap >= 3 || levelOk(k, m))
+          && (tahap >= 2 || !(batasLevel(k.level) && (bulanan[k.id + '|' + ym] || 0) >= batasLevel(k.level))));
+        sisa.sort((a, b) => calonUntuk(a).length - calonUntuk(b).length);
+        for (const m of [...sisa]) {
+          const calon = calonUntuk(m);
+          if (!calon.length) continue;
+          const nilai = k => {
+            const riw = terakhirDi[m.id + '|' + k.id];
+            const jarak = riw ? Math.min(104, ...riw.map(x => pekanAntara(x, t))) : 104;
+            const selisih = Math.abs(m.level - k.level);
+            return (tahap === 3 ? selisih * 1e9 : selisih * 1e5)       // tahap level: selisih level sekecil mungkin
+              + (bulanan[k.id + '|' + ym] || 0) * 1e7                   // tugas bulan ini sesedikit mungkin
+              + (pasangan[m.id + '|' + k.id] || 0) * 1e6                // jarang di masjid ini
+              + (104 - jarak) * 1e3 + (total[k.id] || 0);
+          };
+          const k = calon.sort((a, b) => nilai(a) - nilai(b))[0];
+          const ket = ketPengecualian(k, m, t, H, terakhirDi);
+          catat(m.id, k.id, t);
+          bertugas.add(k.id);
+          isi[m.id] = { khotibId: k.id, ket };
+          sisa = sisa.filter(x => x !== m);
+        }
+        if (!sisa.length) break;
+      }
+    }
+    mKosong.forEach(m => {
+      const x = isi[m.id];
+      if (!x) hasil.push({ tanggal: t, masjidId: m.id, khotibId: '', ket: 'Tidak ada ustadz tersedia: semua ustadz aktif sudah bertugas di masjid lain, terkena larangan masjid ini, atau tertahan kuota kelompok.' });
+      else hasil.push({ tanggal: t, masjidId: m.id, khotibId: x.khotibId, ket: x.ket || '' });
     });
   }
-  return hasil.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+  hasil.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+  // Hitung ulang keterangan pengecualian dalam urutan tanggal (sama seperti urutan pemeriksaan di server),
+  // supaya label menempel pada jadwal yang memang melampaui aturan.
+  const Hc = hitungTugas(S.data.jadwal.filter(sah)), riwDi = {};
+  S.data.jadwal.filter(sah).forEach(j => (riwDi[j.masjidId + '|' + j.khotibId] = riwDi[j.masjidId + '|' + j.khotibId] || []).push(j.tanggal));
+  hasil.forEach(x => {
+    if (!x.khotibId) return;
+    const k = K(x.khotibId), m = M(x.masjidId);
+    x.ket = ketPengecualian(k, m, x.tanggal, Hc, riwDi);
+    Hc.pair[m.id + '|' + k.id] = (Hc.pair[m.id + '|' + k.id] || 0) + 1;
+    Hc.bln[k.id + '|' + x.tanggal.slice(0, 7)] = (Hc.bln[k.id + '|' + x.tanggal.slice(0, 7)] || 0) + 1;
+    (riwDi[m.id + '|' + k.id] = riwDi[m.id + '|' + k.id] || []).push(x.tanggal);
+  });
+  return hasil;
+}
+
+/** Keterangan singkat aturan yang dilonggarkan untuk k → m pada t ('' bila tidak ada). H = {pair, bln}. */
+function ketPengecualian(k, m, t, H, terakhirDi) {
+  const r = [];
+  if (!levelOk(k, m)) r.push(`level: ustadz ${LV[k.level]} di masjid ${LV[m.level]}`);
+  const cap = batasLevel(k.level), n = H.bln[k.id + '|' + t.slice(0, 7)] || 0;
+  if (cap && n >= cap) r.push(`batas bulanan: tugas ke-${n + 1} di ${blnPanjang(t.slice(0, 7))} (batas ${cap}×)`);
+  const pool = poolGiliran(k, m);
+  if (pool.some(x => x.id === k.id)) {
+    const c = id => H.pair[m.id + '|' + id] || 0;
+    if (c(k.id) > Math.min(...pool.map(x => c(x.id)))) {
+      const lalu = terakhirDi && terakhirDi[m.id + '|' + k.id];
+      r.push(`giliran: sudah pernah di masjid ini${lalu && lalu.length ? ' (terakhir ' + tglPendek(lalu.slice().sort().pop()) + ')' : ''}`);
+    }
+  }
+  return r.length ? 'Pengecualian ' + r.join('; ') : '';
 }
 
 /** Kapasitas bulanan (jumlah batas seluruh ustadz aktif) dibanding jumlah slot yang harus diisi. */
@@ -1388,7 +1454,9 @@ function renderPreview() {
       <h3 style="margin:0">Pratinjau: ${P.filter(p => p.khotibId).length} jadwal di ${Object.keys(grup).length} Jumat</h3>
       <div class="row" style="margin:0"><button class="btn ghost" onclick="S.preview=[];renderPreview()">Buang pratinjau</button>
       <button class="btn" onclick="simpanPreview()">Simpan semua</button></div></div>`;
-  if (kosong) h += `<div class="note warn">${kosong} slot tidak bisa diisi karena tidak ada ustadz yang memenuhi semua aturan (level, larangan, kuota kelompok, batas per bulan, dan giliran masjid). Slot itu tidak ikut disimpan; isi manual sebagai pengecualian bila perlu.</div>`;
+  const nPeng = P.filter(p => p.khotibId && p.ket).length;
+  if (nPeng) h += `<div class="note warn"><b>${nPeng} slot diisi dengan pengecualian</b> karena tidak ada ustadz yang memenuhi semua aturan. Aturan yang dilonggarkan dijelaskan di tiap baris dan ikut tersimpan sebagai catatan jadwal. Anda tetap bisa menggantinya.</div>`;
+  if (kosong) h += `<div class="note bad"><b>${kosong} slot tetap kosong</b> karena pada Jumat itu tidak ada lagi ustadz yang bebas (semua sudah bertugas, terkena larangan masjid tersebut, atau tertahan kuota kelompok). Solusinya: aktifkan/tambah ustadz, longgarkan kuota kelompok di tab Aturan, atau pilih manual dari daftar "pengecualian" di baris itu.</div>`;
   kurang.forEach(x => { h += `<div class="note bad">${blnPanjang(x.b)}: ada ${x.slot} slot, tetapi total batas bulanan seluruh ustadz aktif hanya ${x.kap}. Naikkan batas di tab Aturan atau tambah ustadz aktif.</div>`; });
   const H = hitungTugas(S.data.jadwal.filter(sah).concat(P.filter(p => p.khotibId)));
   h += Object.keys(grup).sort().map(t => {
@@ -1400,24 +1468,28 @@ function renderPreview() {
         const lain = [...dipakai].filter(x => x !== p.khotibId);
         // keluarkan penugasan baris ini sendiri dari hitungan sebelum menilai pilihan lain
         if (p.khotibId) { H.pair[m.id + '|' + p.khotibId]--; H.bln[p.khotibId + '|' + t.slice(0, 7)]--; }
-        const opsi = S.data.khotib.filter(k => k.aktif && bolehDi(k, m) && (k.id === p.khotibId ||
-          (!dipakai.has(k.id) && !kelompokPenuh(k.id, lain).length && !alasanBatasGiliran(k, m, t, H).length))).sort(sortLvNama);
+        const bebas = k => k.aktif && !dilarang(k, m) && (k.id === p.khotibId || (!dipakai.has(k.id) && !kelompokPenuh(k.id, lain).length));
+        const opsi = S.data.khotib.filter(k => bebas(k) && levelOk(k, m) && (k.id === p.khotibId && !p.ket || !alasanBatasGiliran(k, m, t, H).length)).sort(sortLvNama);
+        const opsiX = S.data.khotib.filter(k => bebas(k) && !opsi.includes(k))
+          .map(k => ({ k, ket: ketPengecualian(k, m, t, H) })).sort((a, b) => sortLvNama(a.k, b.k));
         if (p.khotibId) { H.pair[m.id + '|' + p.khotibId]++; H.bln[p.khotibId + '|' + t.slice(0, 7)]++; }
         return `<tr><td style="width:42%">${LV[m.level]} ${esc(m.nama)}</td>
-          <td><select onchange="gantiPreview(${i},this.value)" style="padding:7px;border:1px solid #c5cec8;border-radius:7px;max-width:100%">
+          <td><select onchange="gantiPreview(${i},this.value,this.selectedOptions[0]?.dataset.ket||'')" style="padding:7px;border:1px solid #c5cec8;border-radius:7px;max-width:100%">
             <option value="">${p.khotibId ? '— kosongkan —' : '— tidak ada khotib —'}</option>
-            ${opsi.map(k => `<option value="${k.id}" ${k.id === p.khotibId ? 'selected' : ''}>${LV[k.level]} ${esc(k.nama)}</option>`).join('')}
-          </select> ${!p.khotibId ? '<span class="tag bad">kosong</span>' : ''}</td>
+            <optgroup label="Memenuhi semua aturan">${opsi.map(k => `<option value="${k.id}" ${k.id === p.khotibId ? 'selected' : ''}>${LV[k.level]} ${esc(k.nama)}</option>`).join('')}</optgroup>
+            ${opsiX.length ? `<optgroup label="Pengecualian">${opsiX.map(x => `<option value="${x.k.id}" data-ket="${esc(x.ket)}" ${x.k.id === p.khotibId ? 'selected' : ''}>${LV[x.k.level]} ${esc(x.k.nama)} — ${esc(x.ket.replace('Pengecualian ', ''))}</option>`).join('')}</optgroup>` : ''}
+          </select> ${!p.khotibId ? '<span class="tag bad">kosong</span>' : p.ket ? '<span class="tag warn">pengecualian</span>' : ''}
+          ${p.ket ? `<div style="font-size:12.5px;color:${p.khotibId ? '#6b4d0e' : 'var(--red)'};margin-top:4px">${esc(p.ket)}</div>` : ''}</td>
           <td class="act"><button class="btn sm danger" onclick="S.preview.splice(${i},1);renderPreview()">Buang</button></td></tr>`;
       }).join('') + `</tbody></table></div>`;
   }).join('');
   $('#rtPreview').innerHTML = h + '</div>';
 }
 
-function gantiPreview(i, kId) { S.preview[i].khotibId = kId; renderPreview(); }
+function gantiPreview(i, kId, ket) { S.preview[i].khotibId = kId; S.preview[i].ket = kId ? ket : ''; renderPreview(); }
 
 async function simpanPreview() {
-  const items = S.preview.filter(p => p.khotibId).map(p => ({ tanggal: p.tanggal, masjidId: p.masjidId, khotibId: p.khotibId, catatan: '' }));
+  const items = S.preview.filter(p => p.khotibId).map(p => ({ tanggal: p.tanggal, masjidId: p.masjidId, khotibId: p.khotibId, catatan: p.ket || '', override: !!p.ket }));
   if (!items.length) return toast('Tidak ada jadwal yang bisa disimpan.', 'bad');
   try {
     const r = await api('saveJadwalBatch', { items });
