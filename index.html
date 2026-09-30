@@ -322,7 +322,7 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
 <!-- ROTASI -->
 <section class="tab" id="tab-rotasi">
   <h2>Rotasi otomatis</h2>
-  <p class="lead">Sistem mengisi setiap masjid aktif hanya pada pekan yang ditentukan untuk masjid itu. Aturannya: level khotib harus sesuai, tidak ada khotib di dua masjid pada Jumat yang sama, dan pasangan ustadz–masjid tidak diulang sebelum khotib lain mendapat giliran. Riwayat jadwal ikut diperhitungkan. Jadwal yang sudah ada tidak ditimpa.</p>
+  <p class="lead">Sistem mengisi setiap masjid aktif hanya pada pekan yang ditentukan untuk masjid itu, dengan aturan wajib: level sesuai, larangan dan kuota kelompok dipatuhi, tidak ada khotib di dua masjid pada Jumat yang sama, batas khutbah per bulan per level, dan <b>giliran masjid</b>: ustadz baru kembali ke masjid yang sama setelah semua ustadz selevelnya mendapat giliran di masjid itu. Riwayat jadwal ikut diperhitungkan, dan ustadz yang paling lama tidak ke masjid tersebut didahulukan. Jadwal yang sudah ada tidak ditimpa.</p>
   <div class="panel">
     <div class="grid">
       <div class="field"><label for="rtBulan">Mulai bulan</label><input type="month" id="rtBulan"></div>
@@ -331,8 +331,7 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
       <div class="field"><label for="rtPrioritas">Pemilihan level</label>
         <select id="rtPrioritas"><option value="sama">Utamakan level yang sama dengan masjid</option><option value="campur">Campur semua level yang diizinkan</option></select>
         <small>"Utamakan" menjaga tiap khotib di masjid selevelnya (❹ di ❹, ❸ di ❸, dst.). Larangan masjid dan kuota kelompok selalu dipatuhi.</small></div>
-      <div class="field"><label for="rtBatas">Batas tugas per khotib</label>
-        <select id="rtBatas"><option value="0">Tanpa batas</option><option value="2">2 kali per bulan</option><option value="3" selected>3 kali per bulan</option><option value="4">4 kali per bulan</option></select></div>
+      <div class="field"><span class="flabel">Batas khutbah per bulan</span><div id="rtBatasInfo" style="padding:10px 0;font-size:14px"></div><small>Diubah di tab Aturan.</small></div>
     </div>
     <div class="row"><button class="btn" id="btnRtBuat">Buat pratinjau</button></div>
   </div>
@@ -417,6 +416,13 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
 <section class="tab" id="tab-aturan">
   <h2>Aturan khusus</h2>
   <p class="lead">Aturan ini selalu dipatuhi rotasi otomatis. Saat mengisi jadwal manual, pelanggaran ditampilkan sebagai peringatan dan hanya bisa disimpan sebagai pengecualian setelah dikonfirmasi.</p>
+  <div class="panel">
+    <h3>Batas khutbah per bulan menurut level</h3>
+    <p class="lead" style="margin-bottom:10px">Jumlah maksimal seorang ustadz keluar berkhutbah dalam satu bulan. Jadwal yang batal tidak dihitung.</p>
+    <div class="grid" id="btGrid"></div>
+    <div class="row"><button class="btn" id="btnBtSimpan">Simpan batas</button></div>
+    <div id="btKapasitas"></div>
+  </div>
   <div class="panel">
     <h3>Larangan masjid per ustadz</h3>
     <p class="lead" style="margin-bottom:10px">Pilih ustadz, lalu centang satu atau beberapa masjid yang tidak boleh ia datangi.</p>
@@ -517,9 +523,9 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
    Tempel URL /exec dari Apps Script (Deploy → Kelola deployment).
    ===================================================================== */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbx7Y-_PPBKSaIuCrbKJ9IgJgYEB2MmFiS_NB8umWzfx-CHInouVZ-su36qtx4x7B0no/exec'
+  API_URL: 'https://script.google.com/macros/s/AKfycbxWkEpmnOvLFWOT8Uba9AGcQ3j2D18lfr2YdiXwEG0VGMYJ6qLfNpn4OmVYSape/exec'
 };
-const VERSI_APP = '6.3';
+const VERSI_APP = '6.4';
 const ORG = {
   nama: 'Departemen Dakwah dan Kaderisasi',
   induk: 'Dewan Pimpinan Daerah Wahdah Islamiyah Poso',
@@ -587,9 +593,42 @@ function pelanggaran(k, m, t, abaikanId) {
   if (dilarang(k, m)) out.push(`${k.nama} tidak boleh bertugas di ${m.nama} (aturan larangan).`);
   const ids = S.data.jadwal.filter(j => j.tanggal === t && sah(j) && j.id !== abaikanId).map(j => j.khotibId);
   kelompokPenuh(k.id, ids).forEach(g => out.push(`Kelompok "${g.nama}" hanya boleh ${g.maks} orang per Jumat; sudah bertugas: ${anggotaDi(g, ids).map(x => K(x)?.nama || '?').join(', ')}.`));
-  return out;
+  const H = hitungTugas(S.data.jadwal.filter(j => sah(j) && j.id !== abaikanId));
+  return out.concat(alasanBatasGiliran(k, m, t, H));
 }
 const sah = j => j.status !== 'BATAL';
+const BATAS_BAWAAN = { 1: 4, 2: 2, 3: 1, 4: 1 };
+/** Batas khutbah per bulan untuk level L (0 = tanpa batas). */
+const batasLevel = L => { const b = (S.aturanRotasi && S.aturanRotasi.batas) || BATAS_BAWAAN; return Number(b[L] ?? BATAS_BAWAAN[L]) || 0; };
+const hariIniStr = () => ymd(new Date());
+/** Hitung pasangan masjid|khotib dan tugas khotib|bulan dari daftar tugas (jadwal yang tidak batal). */
+function hitungTugas(tugas) {
+  const pair = {}, bln = {};
+  tugas.forEach(j => {
+    pair[j.masjidId + '|' + j.khotibId] = (pair[j.masjidId + '|' + j.khotibId] || 0) + 1;
+    bln[j.khotibId + '|' + j.tanggal.slice(0, 7)] = (bln[j.khotibId + '|' + j.tanggal.slice(0, 7)] || 0) + 1;
+  });
+  return { pair, bln };
+}
+/** Ustadz selevel k yang aktif dan boleh bertugas di masjid m (dasar perhitungan giliran). */
+const poolGiliran = (k, m) => S.data.khotib.filter(x => x.aktif && x.level === k.level && bolehDi(x, m));
+/** Pelanggaran batas bulanan & giliran masjid untuk k → m pada t, berdasarkan hitungan H. */
+function alasanBatasGiliran(k, m, t, H) {
+  const out = [];
+  if (!t || t < hariIniStr()) return out;                     // riwayat lama tidak dinilai
+  const cap = batasLevel(k.level), n = H.bln[k.id + '|' + t.slice(0, 7)] || 0;
+  if (cap && n >= cap) out.push(`${k.nama} sudah ${n}× bertugas di ${blnPanjang(t.slice(0, 7))} (batas ${LV[k.level]} Level ${k.level}: ${cap}× per bulan).`);
+  const pool = poolGiliran(k, m);
+  if (pool.some(x => x.id === k.id)) {
+    const c = id => H.pair[m.id + '|' + id] || 0;
+    const min = Math.min(...pool.map(x => c(x.id)));
+    if (c(k.id) > min) {
+      const belum = pool.filter(x => c(x.id) === min);
+      out.push(`${k.nama} sudah pernah di ${m.nama}; giliran Level ${k.level} di masjid ini belum selesai. Belum mendapat giliran: ${belum.slice(0, 4).map(x => x.nama).join(', ')}${belum.length > 4 ? ` dan ${belum.length - 4} lainnya` : ''}.`);
+    }
+  }
+  return out;
+}
 const sortNama = (a, b) => a.nama.localeCompare(b.nama, 'id');
 const sortLvNama = (a, b) => a.level - b.level || sortNama(a, b);
 
@@ -661,6 +700,7 @@ async function api(action, payload = {}) {
     if (!j.ok) throw new Error(j.message || 'Terjadi kesalahan di server.');
     if (j.versi) S.versiServer = j.versi;
     if (j.publikasi) { S.publikasi = j.publikasi; renderPublikasiAdmin(); }
+    if (j.aturanRotasi) S.aturanRotasi = j.aturanRotasi;
     if (j.data) { S.data = j.data; renderAll(); }
     return j;
   } finally { setSync(false); }
@@ -912,7 +952,37 @@ function infoAturan(k) {
   return t.length ? `<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">${t.join('')}</div>` : '';
 }
 
+function renderBatas() {
+  const L = [1, 2, 3, 4];
+  if (!$('#btGrid').dataset.dibuat) {
+    $('#btGrid').innerHTML = L.map(n => `<div class="field"><label for="bt${n}">${LV[n]} Ustadz Level ${n}</label>
+      <select id="bt${n}"><option value="0">Tanpa batas</option>${[1, 2, 3, 4, 5, 6, 8].map(x => `<option value="${x}">Maksimal ${x}× per bulan</option>`).join('')}</select></div>`).join('');
+    $('#btGrid').dataset.dibuat = '1';
+  }
+  if (!S.btDiubah) L.forEach(n => $('#bt' + n).value = String(batasLevel(n)));
+  $('#rtBatasInfo').innerHTML = L.map(n => `${LV[n]} ${batasLevel(n) ? batasLevel(n) + '×' : 'bebas'}`).join(' &nbsp;·&nbsp; ');
+  // kapasitas bulan berjalan & berikutnya
+  const skr = ymd(jumatBerikut()).slice(0, 7);
+  $('#btKapasitas').innerHTML = [skr, tambahBulan(skr, 1)].map(b => {
+    const x = kapasitasBulan(b);
+    if (!x.slot) return '';
+    const cukup = x.kap >= x.slot;
+    return `<div class="note ${cukup ? 'ok' : 'bad'}">${blnPanjang(b)}: ${x.slot} slot khutbah, kapasitas ustadz aktif ${x.kap === Infinity ? 'tidak terbatas' : x.kap + ' kali'}${cukup ? '' : ' — tidak cukup, sebagian slot akan kosong'}.</div>`;
+  }).join('');
+}
+
+async function simpanBatas() {
+  const batas = {};
+  [1, 2, 3, 4].forEach(n => batas[n] = Number($('#bt' + n).value));
+  try {
+    S.btDiubah = false;
+    await api('simpanAturanRotasi', { aturan: { batas } });
+    toast('Batas khutbah per bulan disimpan.', 'ok');
+  } catch (e) { toast(/tidak dikenal/.test(e.message) ? 'Kode.gs di server belum v6.4. Tempel Kode.gs terbaru lalu buat Versi baru.' : e.message, 'bad'); }
+}
+
 function renderAturan() {
+  renderBatas();
   // editor larangan
   const sel = $('#lrKhotib'), v = sel.value;
   sel.innerHTML = '<option value="">Pilih ustadz</option>' + [...S.data.khotib].sort((a, b) => (b.aktif - a.aktif) || sortLvNama(a, b))
@@ -1160,7 +1230,7 @@ function renderJadwal() {
         <td style="width:36%">${m ? LV[m.level] : ''} ${esc(m?.nama || '(masjid terhapus)')}</td>
         <td style="width:34%">${k ? LV[k.level] : ''} ${esc(k?.nama || '(khotib terhapus)')}
           ${j.status === 'BATAL' ? '<span class="tag bad">Batal</span>' : ''}
-          ${j.override ? '<span class="tag warn">pengecualian level</span>' : ''}</td>
+          ${j.override ? '<span class="tag warn">pengecualian</span>' : ''}</td>
         <td style="font-size:13px;color:var(--muted)">${esc(j.catatan)}</td>
         <td class="act"><button class="btn sm ghost" onclick="ubahJadwal('${j.id}')">Ubah</button>
           <button class="btn sm danger" onclick="hapus('jadwal','${j.id}')">Hapus</button></td></tr>`).join('')}
@@ -1206,75 +1276,89 @@ function hungaria(biaya) {
 
 function buatRotasi(tanggalList, opsi = {}) {
   const gapW = opsi.prioritas === 'campur' ? 0 : 2e7;
-  const batas = Number(opsi.batas) || 0;
   const kh = S.data.khotib.filter(k => k.aktif).sort(sortNama);
   const ms = S.data.masjid.filter(m => m.aktif).sort(sortLvNama);
-  const pasangan = {}, total = {}, terakhir = {}, bulanan = {};
+  const pasangan = {}, total = {}, terakhir = {}, bulanan = {}, terakhirDi = {};
   const catat = (mId, kId, t) => {
     pasangan[mId + '|' + kId] = (pasangan[mId + '|' + kId] || 0) + 1;
     total[kId] = (total[kId] || 0) + 1;
     bulanan[kId + '|' + t.slice(0, 7)] = (bulanan[kId + '|' + t.slice(0, 7)] || 0) + 1;
     if (!terakhir[kId] || t > terakhir[kId]) terakhir[kId] = t;
+    (terakhirDi[mId + '|' + kId] = terakhirDi[mId + '|' + kId] || []).push(t);
   };
   S.data.jadwal.filter(sah).forEach(j => catat(j.masjidId, j.khotibId, j.tanggal));
 
-  const TIDAK_BOLEH = 1e12, KOSONG = 1e11, LEWAT_BATAS = 5e10, ULANG = 1e7, BEBAN = 1e3;
+  // Tingkat biaya: TIDAK_BOLEH = aturan wajib dilanggar; sisanya preferensi.
+  const TIDAK_BOLEH = 1e12, KOSONG = 1e11, JAUH = 1e5, BEBAN = 1e3;
+  const pekanAntara = (a, b) => Math.abs(Math.round((parseYmd(b).getTime() - parseYmd(a).getTime()) / 6048e5));
   const hasil = [];
-  for (const t of tanggalList) {
+  // Di dalam tiap bulan, Jumat yang paling padat diisi lebih dulu agar jatah bulanan yang terbatas
+  // (❷ 2×, ❸/❹ 1×) tidak habis sebelum pekan tersibuk.
+  const slotDi = t => ms.filter(m => masjidTerjadwal(m, t) && !S.data.jadwal.some(j => j.tanggal === t && j.masjidId === m.id)).length;
+  const urutan = [...tanggalList].sort((a, b) => a.slice(0, 7).localeCompare(b.slice(0, 7)) || slotDi(b) - slotDi(a) || a.localeCompare(b));
+  for (const t of urutan) {
     const ada = S.data.jadwal.filter(j => j.tanggal === t);
     const kSibuk = new Set(ada.filter(sah).map(j => j.khotibId));
     const mKosong = ms.filter(m => masjidTerjadwal(m, t) && !ada.some(j => j.masjidId === m.id));
     if (!mKosong.length) continue;
-    const hariIni = parseYmd(t).getTime(), ym = t.slice(0, 7);
+    const ym = t.slice(0, 7);
     const sudahTugas = [...kSibuk];
-    // Anggota kelompok yang kuotanya sudah penuh oleh jadwal yang ada tidak ikut dipilih.
     const tolak = new Set(kh.filter(k => kelompokPenuh(k.id, sudahTugas).length).map(k => k.id));
+    // Giliran: nilai minimum per (masjid, level) atas ustadz aktif selevel yang boleh di masjid itu.
+    const minGiliran = {};
+    mKosong.forEach(m => [1, 2, 3, 4].forEach(L => {
+      const pool = kh.filter(x => x.level === L && bolehDi(x, m));
+      if (pool.length) minGiliran[m.id + '|' + L] = Math.min(...pool.map(x => pasangan[m.id + '|' + x.id] || 0));
+    }));
     let kBebas, biaya, pilih, dipilih;
     for (let putar = 0; putar < 25; putar++) {
-    kBebas = kh.filter(k => !kSibuk.has(k.id) && !tolak.has(k.id));
-    biaya = mKosong.map(m => {
-      const layak = kh.filter(k => bolehDi(k, m));
-      const sama = layak.filter(k => k.level === m.level);
-      const pool = gapW && sama.length ? sama : layak;
-      const putaran = pool.length ? Math.min(...pool.map(k => pasangan[m.id + '|' + k.id] || 0)) : 0;
-      return kBebas.map(k => {
+      kBebas = kh.filter(k => !kSibuk.has(k.id) && !tolak.has(k.id));
+      biaya = mKosong.map(m => kBebas.map(k => {
         if (!bolehDi(k, m)) return TIDAK_BOLEH;
-        const ulang = Math.max(0, (pasangan[m.id + '|' + k.id] || 0) - putaran);
-        const bln = bulanan[k.id + '|' + ym] || 0;
-        const pekanLalu = terakhir[k.id] ? Math.round((hariIni - parseYmd(terakhir[k.id]).getTime()) / 6048e5) : 99;
-        let c = ulang * ULANG + (m.level - k.level) * gapW + (total[k.id] || 0) * BEBAN + bln * 4 * BEBAN;
-        if (pekanLalu <= 1) c += 2 * BEBAN;
-        if (batas && bln >= batas) c += LEWAT_BATAS;
+        const bln = bulanan[k.id + '|' + ym] || 0, cap = batasLevel(k.level);
+        if (cap && bln >= cap) return TIDAK_BOLEH;                                        // batas bulanan level
+        if ((pasangan[m.id + '|' + k.id] || 0) > minGiliran[m.id + '|' + k.level]) return TIDAK_BOLEH; // giliran belum selesai
+        const riw = terakhirDi[m.id + '|' + k.id];
+        const jarak = riw ? Math.min(104, ...riw.map(x => pekanAntara(x, t))) : 104;     // makin jauh dari kunjungan lain ke masjid ini, makin diutamakan
+        let c = (m.level - k.level) * gapW + (104 - jarak) * JAUH + (total[k.id] || 0) * BEBAN + bln * 4 * BEBAN;
+        if (terakhir[k.id] && pekanAntara(terakhir[k.id], t) <= 1) c += 2 * BEBAN;   // hindari tugas pekan berturut-turut
         return c;
-      }).concat(mKosong.map(() => KOSONG));
-    });
-    pilih = hungaria(biaya);
-    dipilih = mKosong.map((m, i) => {
-      const j = pilih[i];
-      return j >= 0 && j < kBebas.length && biaya[i][j] < KOSONG ? { k: kBebas[j], c: biaya[i][j] } : null;
-    });
-    // Periksa kuota kelompok; bila terlampaui, pertahankan anggota dengan biaya terendah dan ulangi tanpa anggota lain.
-    let langgar = false;
-    kelompokAktif().forEach(g => {
-      const ang = daftarId(g.anggota);
-      const sisa = Math.max(0, g.maks - anggotaDi(g, sudahTugas).length);
-      const baru = dipilih.filter(x => x && ang.includes(x.k.id)).sort((a, b) => a.c - b.c);
-      if (baru.length > sisa) {
-        langgar = true;
-        const tetap = new Set(baru.slice(0, sisa).map(x => x.k.id));
-        ang.forEach(id => { if (!tetap.has(id)) tolak.add(id); });
-      }
-    });
-    if (!langgar) break;
+      }).concat(mKosong.map(() => KOSONG)));
+      pilih = hungaria(biaya);
+      dipilih = mKosong.map((m, i) => {
+        const j = pilih[i];
+        return j >= 0 && j < kBebas.length && biaya[i][j] < KOSONG ? { k: kBebas[j], c: biaya[i][j] } : null;
+      });
+      // Kuota kelompok per Jumat
+      let langgar = false;
+      kelompokAktif().forEach(g => {
+        const ang = daftarId(g.anggota);
+        const sisa = Math.max(0, g.maks - anggotaDi(g, sudahTugas).length);
+        const baru = dipilih.filter(x => x && ang.includes(x.k.id)).sort((a, b) => a.c - b.c);
+        if (baru.length > sisa) {
+          langgar = true;
+          const tetap = new Set(baru.slice(0, sisa).map(x => x.k.id));
+          ang.forEach(id => { if (!tetap.has(id)) tolak.add(id); });
+        }
+      });
+      if (!langgar) break;
     }
     mKosong.forEach((m, i) => {
       const x = dipilih[i];
       if (!x) { hasil.push({ tanggal: t, masjidId: m.id, khotibId: '' }); return; }
       catat(m.id, x.k.id, t);
-      hasil.push({ tanggal: t, masjidId: m.id, khotibId: x.k.id, lewatBatas: x.c >= LEWAT_BATAS });
+      hasil.push({ tanggal: t, masjidId: m.id, khotibId: x.k.id });
     });
   }
-  return hasil;
+  return hasil.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+}
+
+/** Kapasitas bulanan (jumlah batas seluruh ustadz aktif) dibanding jumlah slot yang harus diisi. */
+function kapasitasBulan(ym) {
+  const slot = jumatDalamBulan(ym).reduce((n, t) => n + S.data.masjid.filter(m => masjidTerjadwal(m, t)).length, 0);
+  let kap = 0, takTerbatas = false;
+  S.data.khotib.filter(k => k.aktif).forEach(k => { const c = batasLevel(k.level); if (c) kap += c; else takTerbatas = true; });
+  return { slot, kap: takTerbatas ? Infinity : kap };
 }
 
 function buatPreview() {
@@ -1287,7 +1371,7 @@ function buatPreview() {
   for (let i = 0; i < Number($('#rtJumlah').value); i++) tgl = tgl.concat(jumatDalamBulan(tambahBulan(mulai, i)));
   tgl = tgl.filter(t => t >= hariIni);
   if (!tgl.length) return toast('Semua Jumat pada rentang itu sudah lewat.', 'bad');
-  S.preview = buatRotasi(tgl, { prioritas: $('#rtPrioritas').value, batas: $('#rtBatas').value });
+  S.preview = buatRotasi(tgl, { prioritas: $('#rtPrioritas').value });
   renderPreview();
   if (!S.preview.length) toast('Semua masjid pada rentang itu sudah punya jadwal.', 'ok');
 }
@@ -1298,13 +1382,15 @@ function renderPreview() {
   const grup = {};
   P.forEach((p, i) => (grup[p.tanggal] = grup[p.tanggal] || []).push(i));
   const kosong = P.filter(p => !p.khotibId).length;
-  const lewat = P.filter(p => p.lewatBatas).length;
+  const blnP = [...new Set(P.map(p => p.tanggal.slice(0, 7)))];
+  const kurang = blnP.map(b => ({ b, ...kapasitasBulan(b) })).filter(x => x.kap < x.slot);
   let h = `<div class="panel"><div class="row" style="margin-top:0;justify-content:space-between">
       <h3 style="margin:0">Pratinjau: ${P.filter(p => p.khotibId).length} jadwal di ${Object.keys(grup).length} Jumat</h3>
       <div class="row" style="margin:0"><button class="btn ghost" onclick="S.preview=[];renderPreview()">Buang pratinjau</button>
       <button class="btn" onclick="simpanPreview()">Simpan semua</button></div></div>`;
-  if (kosong) h += `<div class="note warn">${kosong} slot tidak bisa diisi karena tidak ada khotib yang sesuai level, tidak terkena larangan/kuota kelompok, dan masih bebas. Slot itu tidak ikut disimpan.</div>`;
-  if (lewat) h += `<div class="note warn">${lewat} penugasan melewati batas per bulan karena kekurangan khotib; ditandai "lewat batas".</div>`;
+  if (kosong) h += `<div class="note warn">${kosong} slot tidak bisa diisi karena tidak ada ustadz yang memenuhi semua aturan (level, larangan, kuota kelompok, batas per bulan, dan giliran masjid). Slot itu tidak ikut disimpan; isi manual sebagai pengecualian bila perlu.</div>`;
+  kurang.forEach(x => { h += `<div class="note bad">${blnPanjang(x.b)}: ada ${x.slot} slot, tetapi total batas bulanan seluruh ustadz aktif hanya ${x.kap}. Naikkan batas di tab Aturan atau tambah ustadz aktif.</div>`; });
+  const H = hitungTugas(S.data.jadwal.filter(sah).concat(P.filter(p => p.khotibId)));
   h += Object.keys(grup).sort().map(t => {
     const dipakai = new Set(grup[t].map(i => P[i].khotibId).filter(Boolean));
     S.data.jadwal.filter(j => j.tanggal === t && sah(j)).forEach(j => dipakai.add(j.khotibId));
@@ -1312,19 +1398,23 @@ function renderPreview() {
       grup[t].map(i => {
         const p = P[i], m = M(p.masjidId);
         const lain = [...dipakai].filter(x => x !== p.khotibId);
-        const opsi = S.data.khotib.filter(k => k.aktif && bolehDi(k, m) && (k.id === p.khotibId || (!dipakai.has(k.id) && !kelompokPenuh(k.id, lain).length))).sort(sortLvNama);
+        // keluarkan penugasan baris ini sendiri dari hitungan sebelum menilai pilihan lain
+        if (p.khotibId) { H.pair[m.id + '|' + p.khotibId]--; H.bln[p.khotibId + '|' + t.slice(0, 7)]--; }
+        const opsi = S.data.khotib.filter(k => k.aktif && bolehDi(k, m) && (k.id === p.khotibId ||
+          (!dipakai.has(k.id) && !kelompokPenuh(k.id, lain).length && !alasanBatasGiliran(k, m, t, H).length))).sort(sortLvNama);
+        if (p.khotibId) { H.pair[m.id + '|' + p.khotibId]++; H.bln[p.khotibId + '|' + t.slice(0, 7)]++; }
         return `<tr><td style="width:42%">${LV[m.level]} ${esc(m.nama)}</td>
           <td><select onchange="gantiPreview(${i},this.value)" style="padding:7px;border:1px solid #c5cec8;border-radius:7px;max-width:100%">
             <option value="">${p.khotibId ? '— kosongkan —' : '— tidak ada khotib —'}</option>
             ${opsi.map(k => `<option value="${k.id}" ${k.id === p.khotibId ? 'selected' : ''}>${LV[k.level]} ${esc(k.nama)}</option>`).join('')}
-          </select> ${!p.khotibId ? '<span class="tag bad">kosong</span>' : ''}${p.lewatBatas ? ' <span class="tag warn">lewat batas</span>' : ''}</td>
+          </select> ${!p.khotibId ? '<span class="tag bad">kosong</span>' : ''}</td>
           <td class="act"><button class="btn sm danger" onclick="S.preview.splice(${i},1);renderPreview()">Buang</button></td></tr>`;
       }).join('') + `</tbody></table></div>`;
   }).join('');
   $('#rtPreview').innerHTML = h + '</div>';
 }
 
-function gantiPreview(i, kId) { S.preview[i].khotibId = kId; S.preview[i].lewatBatas = false; renderPreview(); }
+function gantiPreview(i, kId) { S.preview[i].khotibId = kId; renderPreview(); }
 
 async function simpanPreview() {
   const items = S.preview.filter(p => p.khotibId).map(p => ({ tanggal: p.tanggal, masjidId: p.masjidId, khotibId: p.khotibId, catatan: '' }));
@@ -1872,6 +1962,8 @@ function pasangEvent() {
   $('#lrKhotib').onchange = () => { $('#lrCari').value = ''; isiLarangan(); };
   $('#lrCari').oninput = saringLarangan;
   $('#btnLrSimpan').onclick = simpanLarangan;
+  $('#btnBtSimpan').onclick = simpanBatas;
+  $('#btGrid').onchange = () => { S.btDiubah = true; };
   $('#btnKpSimpan').onclick = simpanKelompok; $('#btnKpBatal').onclick = resetFormKelompok;
   $('#btnSimpanPub').onclick = simpanPublikasi;
   document.querySelectorAll('input[name=pubMode]').forEach(r => r.onchange = () => { S.pubDiubah = true; aturPubBulan(); });
