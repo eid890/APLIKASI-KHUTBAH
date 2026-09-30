@@ -517,7 +517,7 @@ mark{background:#fde58a;color:inherit;border-radius:3px;padding:0 2px}
    Tempel URL /exec dari Apps Script (Deploy → Kelola deployment).
    ===================================================================== */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbylopGV34eIHZzezKFRJm3tKM7XwGMIPDYjeg-cS17_HgZsgs4dy-kXyWToHMZs6nqq/exec'
+  API_URL: 'https://script.google.com/macros/s/AKfycbx7Y-_PPBKSaIuCrbKJ9IgJgYEB2MmFiS_NB8umWzfx-CHInouVZ-su36qtx4x7B0no/exec'
 };
 const VERSI_APP = '6.3';
 const ORG = {
@@ -618,6 +618,30 @@ function setSync(on) {
 }
 
 /* ======================= API ======================= */
+/** Menerjemahkan halaman non-JSON dari Google menjadi penyebab yang bisa ditindaklanjuti. */
+function diagnosaServer(txt, status) {
+  const t = String(txt || '').slice(0, 20000);
+  const polos = t.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const pesanGoogle = (/(TypeError|ReferenceError|SyntaxError|Exception|Error|Kesalahan)[^.]{0,160}/.exec(polos) || [])[0] || '';
+  let sebab;
+  if (/already been declared|telah dideklarasikan|sudah dideklarasikan/i.test(t))
+    sebab = 'Ada kode ganda di proyek Apps Script (misalnya Kode.gs lama masih ada di samping file baru). Sisakan SATU file Kode.gs berisi versi terbaru, simpan, lalu buat Versi baru.';
+  else if (/Script function not found|Fungsi skrip tidak ditemukan/i.test(t))
+    sebab = 'Fungsi doGet/doPost tidak ditemukan di server. Pastikan seluruh isi Kode.gs tertempel dan tersimpan (Ctrl+S), lalu buat Versi baru di Kelola deployment.';
+  else if (/SyntaxError|Syntax error|Kesalahan sintaks|Unexpected (end|token)/i.test(t))
+    sebab = 'Kode.gs di server tidak lengkap atau terpotong saat ditempel. Hapus semua isi Kode.gs, tempel ulang dari file terbaru, simpan, lalu buat Versi baru.';
+  else if (/authori[sz]|otorisasi|perlu izin|requires permission/i.test(t))
+    sebab = 'Skrip memerlukan izin ulang. Di editor Apps Script jalankan fungsi setupDatabase, setujui izinnya, lalu buat Versi baru.';
+  else if (/accounts\.google\.com|ServiceLogin|Sign in|Masuk ke akun|Login/i.test(t))
+    sebab = 'Server meminta login Google. Di Kelola deployment ubah "Yang memiliki akses" menjadi "Siapa saja" (bukan "Siapa saja yang memiliki Akun Google").';
+  else if (status === 404 || /not found|tidak ditemukan/i.test(polos))
+    sebab = 'Alamat API tidak ditemukan. Deployment mungkin diarsipkan/dihapus atau URL salah salin. Salin ulang URL /exec dari Kelola deployment.';
+  else
+    sebab = 'Server tidak mengembalikan data jadwal.';
+  const cuplik = pesanGoogle || polos.slice(0, 160);
+  return sebab + (cuplik ? ` [Pesan server: ${cuplik}]` : '');
+}
+
 async function api(action, payload = {}) {
   if (!S.url) throw new Error('Alamat API belum diisi.');
   setSync(true);
@@ -633,7 +657,7 @@ async function api(action, payload = {}) {
     const txt = await res.text();
     let j;
     try { j = JSON.parse(txt); }
-    catch (e) { throw new Error('Server tidak mengembalikan data. Pastikan deploy sebagai "Aplikasi web", akses "Siapa saja", dan URL berakhiran /exec.'); }
+    catch (e) { throw new Error(diagnosaServer(txt, res.status)); }
     if (!j.ok) throw new Error(j.message || 'Terjadi kesalahan di server.');
     if (j.versi) S.versiServer = j.versi;
     if (j.publikasi) { S.publikasi = j.publikasi; renderPublikasiAdmin(); }
@@ -1611,7 +1635,8 @@ async function bukaPublik() {
   try {
     const res = await fetch(url + '?action=publik');
     let j;
-    try { j = JSON.parse(await res.text()); } catch (e) { throw new Error('Server jadwal tidak merespons dengan benar.'); }
+    const txt = await res.text();
+    try { j = JSON.parse(txt); } catch (e) { throw new Error(diagnosaServer(txt, res.status)); }
     if (!j.ok) throw new Error(/POST/.test(j.message || '') ? 'Server jadwal belum diperbarui ke versi terbaru (v6.2).' : j.message);
     if (S.mode !== 'publik') return;
     S.data = j.data;
